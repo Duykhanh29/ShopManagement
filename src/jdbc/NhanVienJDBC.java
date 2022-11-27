@@ -87,8 +87,11 @@ public class NhanVienJDBC {
         preparedStatement.setString(3, newNV.getChucVu());
         preparedStatement.setString(4, newNV.getMatKhau());
         preparedStatement.setString(5, newNV.getSoDienThoai());
-        preparedStatement.setString(6, newNV.getNgaySinh());
+        String[] text=newNV.getNgaySinh().split("-");
+        String DoB=text[2].concat("-").concat(text[1]).concat("-").concat(text[0]);
+        preparedStatement.setString(6, DoB);
         preparedStatement.setString(7, oldNV.getMaNV());
+        
         int row=preparedStatement.executeUpdate();
         if(row!=0)
         {

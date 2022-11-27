@@ -151,7 +151,7 @@ public class LogIn extends javax.swing.JFrame {
                 String userName = String.valueOf(userNameTextField.getText());
                 if (userName.contains(listRole.get(i).getMaNV())) {
                     //NhanVienKhoUI newUI = new NhanVienKhoUI(userName);
-                    NhanVienKhoUI newUI = new NhanVienKhoUI();
+                    NhanVienKhoUI newUI = new NhanVienKhoUI(userName);
                     newUI.setVisible(true);
                     value = true;
                     this.dispose();

@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import jdbc.*;
 
@@ -68,9 +73,16 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
         defaultTableModel=(DefaultTableModel)hoaDonTable.getModel();
         maNVTextField.setText(maNV);
         showComboBox();
+       // showSpinner();
+        
+        
         display();
     }
 
+//    public void showSpinner(){
+//        
+//          
+//    }
     private NhanVienBanHangUI() {
     }
 
@@ -238,6 +250,7 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("So Luong");
 
+        soLuongSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         soLuongSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 soLuongSpinnerStateChanged(evt);
@@ -482,6 +495,12 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         String id = maHangHoaComboBox.getSelectedItem().toString();
         System.out.println("ID: " + id);
+        int soLuong=danhSachHangHoa.getSoLuongCuaMotHangHoa(id);
+        SpinnerModel spinnerModel = new SpinnerNumberModel(0, // initial value
+                0, // min
+                soLuong, // max
+                1);
+        soLuongSpinner.setModel(spinnerModel);
         String tenHH = danhSachHangHoa.getTenHHFromMaHH(id);
         tenHangHoaTextField.setText(tenHH);
         int giaBan = danhSachHangHoa.getDonGiaFromID(id);

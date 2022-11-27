@@ -169,4 +169,12 @@ public class DanhSachHangHoa {
         }
         return false;
     }
+    public int getSoLuongCuaMotHangHoa(String id){
+        for (HangHoa hangHoa : list) {
+            if(hangHoa.getMaHH().equals(id)){
+                return hangHoa.getSoLuong();
+            }
+        }
+        return -1;
+    }
 }

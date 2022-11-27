@@ -91,15 +91,19 @@ public class QuanLyCuaHang {
 //        for (NhanVien nhanVien1 : newList) {
 //            System.out.println(nhanVien1.toString());
 //        }
-String x="15-09-2021";
-        CheckDate check=new CheckDate();
-        check.validDate(x);
-        check.ValidFormat(x);
-String[] text = String.valueOf(x).split("-");
-                String ngaySinh = text[2] +""+ text[1] +""+ text[0]+"";
-                System.out.println(ngaySinh);
-                String DoB=text[2].concat("-").concat(text[1]).concat("-").concat(text[0]);
-        System.out.println("DoB: "+DoB);
+//String x="15-09-2021";
+//        CheckDate check=new CheckDate();
+//        check.validDate(x);
+//        check.ValidFormat(x);
+//String[] text = String.valueOf(x).split("-");
+//                String ngaySinh = text[2] +""+ text[1] +""+ text[0]+"";
+//                System.out.println(ngaySinh);
+//                String DoB=text[2].concat("-").concat(text[1]).concat("-").concat(text[0]);
+//        System.out.println("DoB: "+DoB);
+FileIO fileIO=new FileIO();
+String fileName="thongBao.txt";
+String x=fileIO.readData(fileName);
+        System.out.println(x);
     }
 
 }
