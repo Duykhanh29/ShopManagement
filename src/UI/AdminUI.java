@@ -15,7 +15,9 @@ import java.util.regex.Pattern;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import jdbc.*;
+import File.*;
 import check.*;
+import java.io.File;
 
 /**
  *
@@ -28,7 +30,7 @@ public class AdminUI extends javax.swing.JFrame {
     NhanVienJDBC nhanVienJDBC;
     HoaDonJDBC donJDBC;
     ChiTietHoaDonJDBC chiTietHoaDonJDBC;
-
+    
     DanhSachHangHoa danhSachHangHoa;
     DanhSachHoaDon danhSachHoaDon;
     DanhSachChiTietHoaDon danhSachChiTietHoaDon;
@@ -43,9 +45,12 @@ public class AdminUI extends javax.swing.JFrame {
     ArrayList<HoaDon> listHoaDon = null;
     Pattern checkValidPhone = Pattern.compile("^0\\d{9}$");
     CheckDate checkDate = new CheckDate();
-
-    int click = -1;
-
+    
+    FileIO fileIO=new FileIO();
+    int clickNV = -1;
+    int clickHH=-1;
+    String fileName="thongBao.txt";
+    boolean isOpen=false;
     /**
      * Creates new form AdminUI
      */
@@ -73,6 +78,7 @@ public class AdminUI extends javax.swing.JFrame {
         bangNhanVien = (DefaultTableModel) nhanVienTable.getModel();
         bangHangHoa = (DefaultTableModel) hangHoaTable.getModel();
         showComboBox();
+        vietThongBaoTextArea.setVisible(false);
         displayDanhSachHangHoa();
         displayDanhSachNhanVien();
     }
@@ -106,7 +112,9 @@ public class AdminUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         thongBaoPanel = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        vietThongBaoTextArea = new javax.swing.JTextArea();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         nhanVienPanel = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         maNVTextField = new javax.swing.JTextField();
@@ -242,26 +250,47 @@ public class AdminUI extends javax.swing.JFrame {
 
         taoThongBaoPanel.addTab("Doanh Thu", doanhThuPanel);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setText("Text Area\n");
-        jScrollPane4.setViewportView(jTextArea1);
+        vietThongBaoTextArea.setColumns(20);
+        vietThongBaoTextArea.setRows(5);
+        vietThongBaoTextArea.setText("\n");
+        jScrollPane4.setViewportView(vietThongBaoTextArea);
+
+        jButton1.setText("Tao Thong Bao");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Xac nhan");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout thongBaoPanelLayout = new javax.swing.GroupLayout(thongBaoPanel);
         thongBaoPanel.setLayout(thongBaoPanelLayout);
         thongBaoPanelLayout.setHorizontalGroup(
             thongBaoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(thongBaoPanelLayout.createSequentialGroup()
-                .addGap(257, 257, 257)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(412, Short.MAX_VALUE))
+                .addGap(49, 49, 49)
+                .addGroup(thongBaoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 730, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(124, Short.MAX_VALUE))
         );
         thongBaoPanelLayout.setVerticalGroup(
             thongBaoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(thongBaoPanelLayout.createSequentialGroup()
-                .addGap(94, 94, 94)
+                .addGap(69, 69, 69)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(52, 52, 52)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(388, Short.MAX_VALUE))
+                .addGap(69, 69, 69)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(226, Short.MAX_VALUE))
         );
 
         taoThongBaoPanel.addTab("Tao Thong Bao", thongBaoPanel);
@@ -438,6 +467,11 @@ public class AdminUI extends javax.swing.JFrame {
                 "No.", "MaHH", "TenHH", "Nha Cung Cap", "So Luong", "Gia Nhap", "Gia Ban"
             }
         ));
+        hangHoaTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                hangHoaTableMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(hangHoaTable);
 
         jLabel4.setText("MaHH");
@@ -460,14 +494,29 @@ public class AdminUI extends javax.swing.JFrame {
         });
 
         suaHangHoaButton.setText("Sua");
+        suaHangHoaButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                suaHangHoaButtonActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Xoa");
 
         xoaTatCaHangHoaButton.setText("Xoa tat ca");
 
         timKiemHangHoaButton.setText("Tim Kiem");
+        timKiemHangHoaButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                timKiemHangHoaButtonActionPerformed(evt);
+            }
+        });
 
         resetHangHoaButton.setText("Reset");
+        resetHangHoaButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetHangHoaButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout hangHoaPanelLayout = new javax.swing.GroupLayout(hangHoaPanel);
         hangHoaPanel.setLayout(hangHoaPanelLayout);
@@ -708,6 +757,16 @@ public class AdminUI extends javax.swing.JFrame {
         return nv;
     }
 
+    public HangHoa getHangHoaFromForm(){
+        HangHoa hh=new HangHoa();
+        hh.setGiaBan(Integer.parseInt(giaBanTextField.getText()));
+        hh.setGiaNhap(Integer.parseInt(giaNhapTextField.getText()));
+        hh.setMaHH(maHHTextField.getText());
+        hh.setTenHangHoa(tenHHTextField.getText());
+        hh.setNhaCungCap(nhaCungCapTextField.getText());
+        hh.setSoLuong(Integer.parseInt(soLuongSpinner.getValue().toString()));
+        return hh;
+    }
     public void showToFormNhanVien(NhanVien n) {
         maNVTextField.setText(n.getMaNV());
         tenNVTextField.setText(n.getTenNV());
@@ -719,7 +778,18 @@ public class AdminUI extends javax.swing.JFrame {
             chucVuComboBox.setSelectedItem(0);
         }
         soDienThoaiTextField.setText(n.getSoDienThoai());
-        ngaySinhTextField.setText(n.getNgaySinh());
+        String[] text=n.getNgaySinh().split("-");
+        String DoB=text[2].concat("-").concat(text[1]).concat("-").concat(text[0]);
+        ngaySinhTextField.setText(DoB);
+        
+    }
+    public void showTOFormHangHoa(HangHoa h){
+        maHHTextField.setText(h.getMaHH());
+        tenHHTextField.setText(h.getTenHangHoa());
+        nhaCungCapTextField.setText(h.getNhaCungCap());
+        giaNhapTextField.setText(h.getGiaNhap()+"");
+        giaBanTextField.setText(h.getGiaBan()+"");
+        soLuongSpinner.setValue(h.getSoLuong());
     }
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
         try {
@@ -755,7 +825,7 @@ public class AdminUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (emptyCheckNhanVien() == false) {
             try {
-                NhanVien oldNV = danhSachNhanVien.getNhanVienAtIndex(click);
+                NhanVien oldNV = danhSachNhanVien.getNhanVienAtIndex(clickNV);
                 NhanVien newNV = getNhanVienFromForm();
                 nhanVienJDBC.edit(oldNV, newNV);
                 listNhanVien = nhanVienJDBC.getDataNhanVien();
@@ -773,9 +843,9 @@ public class AdminUI extends javax.swing.JFrame {
     private void xoaNhanVienButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xoaNhanVienButtonActionPerformed
         // TODO add your handling code here:
         if (listNhanVien.size() != 0) {
-            if (click != 0) {
+            if (clickNV != 0) {
                 try {
-                    NhanVien nv = danhSachNhanVien.getNhanVienAtIndex(click);
+                    NhanVien nv = danhSachNhanVien.getNhanVienAtIndex(clickNV);
                     System.out.println(nv.toString());
                     nhanVienJDBC.delete(nv);
                     listNhanVien = nhanVienJDBC.getDataNhanVien();
@@ -794,7 +864,7 @@ public class AdminUI extends javax.swing.JFrame {
     private void xoaTatCaNhanVienButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xoaTatCaNhanVienButtonActionPerformed
         // TODO add your handling code here:
          if (listNhanVien.size() != 0) {
-            if (click != 0) {
+            if (clickNV != 0) {
                 try {
                     for (int i = 0; i < listNhanVien.size(); i++) {
                         nhanVienJDBC.delete(listNhanVien.get(i));
@@ -900,13 +970,95 @@ public class AdminUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (listNhanVien.size() != 0) {
             int point = nhanVienTable.getSelectedRow();
-            click = point;
-            if (click != -1) {
-                NhanVien nv = danhSachNhanVien.getNhanVienAtIndex(click);
+            clickNV = point;
+            if (clickNV != -1) {
+                NhanVien nv = danhSachNhanVien.getNhanVienAtIndex(clickNV);
                 showToFormNhanVien(nv);
             }
         }
     }//GEN-LAST:event_nhanVienTableMouseClicked
+
+    private void suaHangHoaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_suaHangHoaButtonActionPerformed
+        // TODO add your handling code here:
+        if(listHangHoa.size()!=0){
+            if(clickHH!=-1){
+                try {
+                    HangHoa oldHH = danhSachHangHoa.getHangHoaAtIndex(clickHH);
+                    HangHoa newHH=getHangHoaFromForm();
+                    hangHoaJDBC.edit(oldHH, newHH);
+                    listHangHoa=hangHoaJDBC.getDataHangHoa();
+                    danhSachHangHoa.setList(listHangHoa);
+                    bangHangHoa.setRowCount(0);
+                    displayDanhSachHangHoa();
+                } catch (Exception ex) {
+                    Logger.getLogger(AdminUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }else{
+            JOptionPane.showMessageDialog(hangHoaPanel, "No data");
+        }
+    }//GEN-LAST:event_suaHangHoaButtonActionPerformed
+
+    private void hangHoaTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hangHoaTableMouseClicked
+        // TODO add your handling code here:
+        if (listHangHoa.size() != 0) {
+            int point = hangHoaTable.getSelectedRow();
+            clickHH = point;
+            if (clickHH != -1) {
+                HangHoa hh = danhSachHangHoa.getHangHoaAtIndex(clickHH);
+                showTOFormHangHoa(hh);
+            }
+        }
+    }//GEN-LAST:event_hangHoaTableMouseClicked
+
+    private void resetHangHoaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetHangHoaButtonActionPerformed
+        // TODO add your handling code here:
+        maHHTextField.setText("");
+        tenHHTextField.setText("");
+        nhaCungCapTextField.setText("");
+        soLuongSpinner.setValue(0);
+        giaNhapTextField.setText("");
+        giaBanTextField.setText("");
+        bangHangHoa.setRowCount(0);
+        displayDanhSachHangHoa();
+    }//GEN-LAST:event_resetHangHoaButtonActionPerformed
+
+    private void timKiemHangHoaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timKiemHangHoaButtonActionPerformed
+        // TODO add your handling code here:
+        if(listHangHoa.size()!=0){
+            if(timKiemHangHoaTextField.getText().toString().trim().equals("")){
+                JOptionPane.showMessageDialog(hangHoaPanel, "Nhap ma");
+            }else{
+                HangHoa h=danhSachHangHoa.getHangHoaWithID(timKiemHangHoaTextField.getText().toString().trim());
+                if(h==null){
+                    JOptionPane.showMessageDialog(hangHoaPanel, "not found");
+                }else{
+                    showTOFormHangHoa(h);
+                    bangHangHoa.setRowCount(0);
+                    showTableHangHoa(1, h);
+                }
+            }
+        }else{
+            JOptionPane.showMessageDialog(hangHoaPanel, "No data");
+        }
+    }//GEN-LAST:event_timKiemHangHoaButtonActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        vietThongBaoTextArea.setVisible(true);
+        isOpen=true;
+       // String content= vietThongBaoTextArea.getText();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        if(isOpen==false){
+            JOptionPane.showMessageDialog(this, "Please press create notifications");
+        }else{
+            String content= vietThongBaoTextArea.getText();
+            fileIO.writeFile(fileName, content);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -954,6 +1106,8 @@ public class AdminUI extends javax.swing.JFrame {
     private javax.swing.JTextField giaNhapTextField;
     private javax.swing.JPanel hangHoaPanel;
     private javax.swing.JTable hangHoaTable;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JComboBox<String> jComboBox1;
@@ -974,7 +1128,6 @@ public class AdminUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JButton logoutButton;
     private javax.swing.JTextField maHHTextField;
     private javax.swing.JTextField maNVTextField;
@@ -1002,6 +1155,7 @@ public class AdminUI extends javax.swing.JFrame {
     private javax.swing.JTextField timKiemHangHoaTextField;
     private javax.swing.JButton timKiemNhanVienButton;
     private javax.swing.JTextField timKiemNhanVienTextField;
+    private javax.swing.JTextArea vietThongBaoTextArea;
     private javax.swing.JButton xoaNhanVienButton;
     private javax.swing.JButton xoaTatCaHangHoaButton;
     private javax.swing.JButton xoaTatCaNhanVienButton;
