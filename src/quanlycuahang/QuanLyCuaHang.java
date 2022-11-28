@@ -104,7 +104,9 @@ FileIO fileIO=new FileIO();
 String fileName="thongBao.txt";
 String x=fileIO.readData(fileName);
         System.out.println(x);
+        System.out.println(x);
     }
+    
 
 }
     
