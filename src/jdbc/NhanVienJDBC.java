@@ -101,4 +101,20 @@ public class NhanVienJDBC {
         }
         connection.close();
     }
+    public void changePassword(String maNV,String newPassword) throws Exception{
+        Connection connection=connectToDatabase.getConnection();
+        String sql="update NhanVien set matKhau=? where maNV=?";
+        PreparedStatement preparedStatement=connection.prepareStatement(sql);
+        preparedStatement.setString(1, newPassword);
+        preparedStatement.setString(2, maNV);
+        
+        int row=preparedStatement.executeUpdate();
+        if(row!=0)
+        {
+            System.out.println("\tEdit successfully");
+        }else{
+            System.out.println("\tEdit unsuccessfully");
+        }
+        connection.close();
+    }
 }

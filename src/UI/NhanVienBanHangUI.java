@@ -36,93 +36,98 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
     HangHoaJDBC hangHoaJDBC;
     DefaultTableModel defaultTableModel;
     DefaultTableModel defaultTableModelDetail;
-    
-    ArrayList<HangHoa> listHangHoa=new ArrayList<>();
-    ArrayList<ChiTietHoaDon> listChiTietHoaDon=new ArrayList<>();
-    ArrayList<HoaDon> listBill=new ArrayList<>();     // nếu được chỉ là danh sách các bill của nhân viên này thôi. Còn hiện tại là all staff ( 21/11/2022)
-    DanhSachChiTietHoaDon temporaryDanhSachChiTietHoaDon=new DanhSachChiTietHoaDon();
-    
+
+    ArrayList<HangHoa> listHangHoa = new ArrayList<>();
+    ArrayList<ChiTietHoaDon> listChiTietHoaDon = new ArrayList<>();
+    ArrayList<HoaDon> listBill = new ArrayList<>();     // nếu được chỉ là danh sách các bill của nhân viên này thôi. Còn hiện tại là all staff ( 21/11/2022)
+    DanhSachChiTietHoaDon temporaryDanhSachChiTietHoaDon = new DanhSachChiTietHoaDon();
+
     String maNV;
-    
-    
+    int clickChiTietHoaDon = -1;
+    int clickHoaDon = -1;
+
     public NhanVienBanHangUI(String dataController) throws Exception {
         initComponents();
-        hoaDonJDBC=new HoaDonJDBC();
-        hangHoaJDBC=new HangHoaJDBC();
-        chiTietHoaDonJDBC=new ChiTietHoaDonJDBC();
-        danhSachChiTietHoaDon=new DanhSachChiTietHoaDon();
-        danhSachHoaDon=new DanhSachHoaDon();
-        danhSachHangHoa =new DanhSachHangHoa();
-        
-        
-        listBill=hoaDonJDBC.getDataHoaDon();
-        listHangHoa=hangHoaJDBC.getDataHangHoa();
-        listChiTietHoaDon=chiTietHoaDonJDBC.getDataChiTietHoaDon();
-      //  danhSachChiTietHoaDon
-      
-      
+        hoaDonJDBC = new HoaDonJDBC();
+        hangHoaJDBC = new HangHoaJDBC();
+        chiTietHoaDonJDBC = new ChiTietHoaDonJDBC();
+        danhSachChiTietHoaDon = new DanhSachChiTietHoaDon();
+        danhSachHoaDon = new DanhSachHoaDon();
+        danhSachHangHoa = new DanhSachHangHoa();
+
+        listBill = hoaDonJDBC.getDataHoaDon();
+        listHangHoa = hangHoaJDBC.getDataHangHoa();
+        listChiTietHoaDon = chiTietHoaDonJDBC.getDataChiTietHoaDon();
+        //  danhSachChiTietHoaDon
+
         danhSachHangHoa.setList(listHangHoa);
         danhSachHoaDon.setDanhSachHoaDon(listBill);
-        
-      
-        
-        
-        maNV=dataController;
-        
-        defaultTableModelDetail=(DefaultTableModel)chiTietTable.getModel();
-        defaultTableModel=(DefaultTableModel)hoaDonTable.getModel();
+
+        maNV = dataController;
+
+        defaultTableModelDetail = (DefaultTableModel) chiTietTable.getModel();
+        defaultTableModel = (DefaultTableModel) hoaDonTable.getModel();
         maNVTextField.setText(maNV);
         showComboBox();
-       // showSpinner();
-        
-        
+        // showSpinner();
+        showNgayBanLabel.setText(returnDate());
         display();
+        this.setLocationRelativeTo(null);
     }
 
-//    public void showSpinner(){
-//        
-//          
-//    }
+
     private NhanVienBanHangUI() {
     }
 
-    public void display(){
+    public void display() {
         defaultTableModel.setRowCount(0);
-        if(listBill!=null){
+        if (listBill != null) {
             for (int i = 0; i < listBill.size(); i++) {
-            showTable((i+1),listBill.get(i));
+                showTable((i + 1), listBill.get(i));
+            }
         }
-        }
-        
+
     }
-    public void showTable(int index,HoaDon h){
+
+    public void showTable(int index, HoaDon h) {
         defaultTableModel.addRow(new Object[]{
-            index,h.getMaHD(),h.getMaNV(),h.getThoiGian(),h.getSoLuong(),h.getTongTien()
+            index, h.getMaHD(), h.getMaNV(), h.getThoiGian(), h.getSoLuong(), h.getTongTien()
         });
     }
-    public void displayChiTietHangHoa(){
-        if(temporaryDanhSachChiTietHoaDon.getSize()!=0){
-            for(int i=0;i<temporaryDanhSachChiTietHoaDon.getSize();i++){
-                showTableDetail((i+1),temporaryDanhSachChiTietHoaDon.getChiTietHoaDonAtIndex(i));
+
+    public void displayChiTietHangHoa() {
+        if (temporaryDanhSachChiTietHoaDon.getSize() != 0) {
+            for (int i = 0; i < temporaryDanhSachChiTietHoaDon.getSize(); i++) {
+                showTableDetail((i + 1), temporaryDanhSachChiTietHoaDon.getChiTietHoaDonAtIndex(i));
             }
         }
         displayTKDetail();
     }
-    public void displayTKDetail(){
-        int soLuong=0;
-        int tongTien=0;
+
+    public void displayTKDetail() {
+        int soLuong = 0;
+        int tongTien = 0;
         for (int i = 0; i < temporaryDanhSachChiTietHoaDon.getSize(); i++) {
-            soLuong=soLuong+temporaryDanhSachChiTietHoaDon.getChiTietHoaDonAtIndex(i).getSoLuong();
-            tongTien=tongTien+temporaryDanhSachChiTietHoaDon.getChiTietHoaDonAtIndex(i).getTongTien();
+            soLuong = soLuong + temporaryDanhSachChiTietHoaDon.getChiTietHoaDonAtIndex(i).getSoLuong();
+            tongTien = tongTien + temporaryDanhSachChiTietHoaDon.getChiTietHoaDonAtIndex(i).getTongTien();
         }
         defaultTableModelDetail.addRow(new Object[]{
-            "","","","",soLuong,tongTien
+            "", "", "", "", soLuong, tongTien
         });
     }
-    public void showTableDetail(int index,ChiTietHoaDon c){
+
+    public void showTableDetail(int index, ChiTietHoaDon c) {
         defaultTableModelDetail.addRow(new Object[]{
-            index,c.getMaHH(),c.getTenHangHoa(),c.getGiaBan(),c.getSoLuong(),c.getTongTien()
+            index, c.getMaHH(), c.getTenHangHoa(), c.getGiaBan(), c.getSoLuong(), c.getTongTien()
         });
+    }
+
+    private void showComboBox() {
+        ArrayList<String> danhSachMaHH = new ArrayList<>();
+        danhSachMaHH = danhSachHangHoa.getListID();
+        for (String string : danhSachMaHH) {
+            maHangHoaComboBox.addItem(string);
+        }
     }
     public boolean emptyCheck() {
         if (maHDTextField.getText().toString().equals("")) {
@@ -132,21 +137,42 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
         }
         return false;
     }
-    public boolean emptyCheck2(){
-        if(Integer.parseInt(soLuongSpinner.getValue().toString())==0){
-                JOptionPane.showMessageDialog(this, "Please input quantity");
-                soLuongSpinner.requestFocus();
-                return true;
+
+    public boolean emptyCheck2() {
+        if (Integer.parseInt(soLuongSpinner.getValue().toString()) == 0) {
+            JOptionPane.showMessageDialog(this, "Please input quantity");
+            soLuongSpinner.requestFocus();
+            return true;
         }
         return false;
     }
 
     public String returnDate() {
-      //  DateTimeFormatter format1 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        //  DateTimeFormatter format1 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate currentDate = LocalDate.now();
         return currentDate.toString();
     }
-    
+
+    public void showFormChiTietHoaDon(ChiTietHoaDon cthd) {
+        maHDTextField.setText(cthd.getMaHD());
+        maHangHoaComboBox.setSelectedItem(cthd.getMaHH());
+        tenHangHoaLabel.setText(cthd.getTenHangHoa());
+        showCostLabel.setText(cthd.getGiaBan() + "");
+        showTotalCostsLabel.setText(cthd.getTongTien() + "");
+        soLuongSpinner.setValue(cthd.getSoLuong());
+    }
+
+    public ChiTietHoaDon getChiTietHoaDonFromForm() {
+        ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon();
+        chiTietHoaDon.setMaHD(maHDTextField.getText());
+        chiTietHoaDon.setMaHH(maHangHoaComboBox.getSelectedItem().toString());
+        chiTietHoaDon.setSoLuong(Integer.valueOf(soLuongSpinner.getValue().toString()));
+        chiTietHoaDon.setTenHangHoa(tenHangHoaLabel.getText());
+        chiTietHoaDon.setTongTien(Integer.valueOf(showTotalCostsLabel.getText()));
+        chiTietHoaDon.setGiaBan(Integer.valueOf(showCostLabel.getText()));
+        return chiTietHoaDon;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -161,14 +187,12 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
         maHDTextField = new javax.swing.JTextField();
         maNVLabel = new javax.swing.JLabel();
         maNVTextField = new javax.swing.JTextField();
-        ngayBanTextField = new javax.swing.JTextField();
         ngayBanLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         hoaDonTable = new javax.swing.JTable();
         findButton = new javax.swing.JButton();
         findTextField = new javax.swing.JTextField();
         themHangHoaButton = new javax.swing.JButton();
-        deleteButton = new javax.swing.JButton();
         maHHLabel = new javax.swing.JLabel();
         maHangHoaComboBox = new javax.swing.JComboBox<>();
         donGiaLabel2 = new javax.swing.JLabel();
@@ -176,16 +200,18 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         soLuongSpinner = new javax.swing.JSpinner();
         tenHHLabel = new javax.swing.JLabel();
-        tenHangHoaTextField = new javax.swing.JTextField();
         tongTienLabel = new javax.swing.JLabel();
         showTotalCostsLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         chiTietTable = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        resetChiTietHoaDon = new javax.swing.JButton();
+        suaChiTietHoaDon = new javax.swing.JButton();
+        xoaChiTietHoaDon = new javax.swing.JButton();
         confirmPaymentButton = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        resetButton = new javax.swing.JButton();
+        tenHangHoaLabel = new javax.swing.JLabel();
+        showNgayBanLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -208,12 +234,6 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
             }
         });
 
-        ngayBanTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ngayBanTextFieldActionPerformed(evt);
-            }
-        });
-
         ngayBanLabel.setText("Ngay Ban");
 
         hoaDonTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -224,9 +244,22 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
                 "No.", "MaHD", "MaNV", "ThoiGian", "TongSoLuong", "TongTien"
             }
         ));
+        hoaDonTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                hoaDonTableMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                hoaDonTableMouseEntered(evt);
+            }
+        });
         jScrollPane1.setViewportView(hoaDonTable);
 
         findButton.setText("Find");
+        findButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                findButtonActionPerformed(evt);
+            }
+        });
 
         themHangHoaButton.setText("Them Hang Hoa");
         themHangHoaButton.addActionListener(new java.awt.event.ActionListener() {
@@ -234,8 +267,6 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
                 themHangHoaButtonActionPerformed(evt);
             }
         });
-
-        deleteButton.setText("Delete");
 
         maHHLabel.setText("Ma Hang Hoa");
 
@@ -259,12 +290,6 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
 
         tenHHLabel.setText("Ten Hang Hoa");
 
-        tenHangHoaTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tenHangHoaTextFieldActionPerformed(evt);
-            }
-        });
-
         tongTienLabel.setText("Tong Tien");
 
         chiTietTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -275,16 +300,31 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
                 "No.", "Ma HH", "Ten HH", "Don Gia", "So Luong", "Tong Tien"
             }
         ));
+        chiTietTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                chiTietTableMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(chiTietTable);
 
-        jButton1.setText("Reset");
-
-        jButton2.setText("Edit");
-
-        jButton3.setText("Delete");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        resetChiTietHoaDon.setText("Reset");
+        resetChiTietHoaDon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                resetChiTietHoaDonActionPerformed(evt);
+            }
+        });
+
+        suaChiTietHoaDon.setText("Edit");
+        suaChiTietHoaDon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                suaChiTietHoaDonActionPerformed(evt);
+            }
+        });
+
+        xoaChiTietHoaDon.setText("Delete");
+        xoaChiTietHoaDon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                xoaChiTietHoaDonActionPerformed(evt);
             }
         });
 
@@ -295,10 +335,17 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
             }
         });
 
-        jButton4.setText("LogOut");
+        jButton4.setText("Back");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
+            }
+        });
+
+        resetButton.setText("Reset");
+        resetButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetButtonActionPerformed(evt);
             }
         });
 
@@ -333,21 +380,32 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
                                         .addComponent(findButton)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
+                                        .addGap(204, 204, 204)
+                                        .addComponent(resetButton))
+                                    .addGroup(layout.createSequentialGroup()
                                         .addGap(153, 153, 153)
                                         .addComponent(ngayBanLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(ngayBanTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(181, 181, 181)
-                                        .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(110, 110, 110)))
+                                        .addGap(18, 18, 18)
+                                        .addComponent(showNgayBanLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(103, 103, 103)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(tenHHLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(maHHLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(169, 169, 169)
+                                                .addComponent(confirmPaymentButton))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(tenHangHoaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(tongTienLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(showTotalCostsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(maHangHoaComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
@@ -357,27 +415,17 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(soLuongSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(47, 47, 47))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(confirmPaymentButton)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(tenHangHoaTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(tongTienLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(showTotalCostsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(72, 72, 72))))
+                                        .addComponent(soLuongSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(47, 47, 47))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(136, 136, 136)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(resetChiTietHoaDon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(themHangHoaButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(xoaChiTietHoaDon, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(suaChiTietHoaDon, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(125, 125, 125))))))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -399,10 +447,10 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
                         .addComponent(maHDLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(maHDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(ngayBanLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(ngayBanTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(maHHLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(maHangHoaComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(donGiaLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(donGiaLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(showNgayBanLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(showCostLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(soLuongSpinner))
@@ -411,28 +459,26 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
                     .addComponent(showTotalCostsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tenHHLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(tenHangHoaTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(tongTienLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(maNVLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(maNVTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(maNVTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tenHangHoaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(33, 33, 33)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(themHangHoaButton)
-                            .addComponent(jButton2))
+                            .addComponent(suaChiTietHoaDon))
                         .addGap(8, 8, 8)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton3)
-                            .addComponent(jButton1)))
+                            .addComponent(xoaChiTietHoaDon)
+                            .addComponent(resetChiTietHoaDon)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(63, 63, 63)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(findTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(findButton)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(64, 64, 64)
-                        .addComponent(deleteButton)))
+                            .addComponent(findButton)
+                            .addComponent(resetButton))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(confirmPaymentButton, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
@@ -453,39 +499,38 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_maNVTextFieldActionPerformed
 
-    private void ngayBanTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ngayBanTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ngayBanTextFieldActionPerformed
 
-    
     private void themHangHoaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_themHangHoaButtonActionPerformed
         if (emptyCheck() != true) {
-            if(emptyCheck2()!=true){
+            if (emptyCheck2() != true) {
                 try {
-                    String maHD=String.valueOf(maHDTextField.getText());
-                    String maHH=maHangHoaComboBox.getSelectedItem().toString();
-                    String tenHH = danhSachHangHoa.getTenHHFromMaHH(maHH);
-                    int soLuong=Integer.parseInt(soLuongSpinner.getValue().toString());
-                    int giaBan = danhSachHangHoa.getDonGiaFromID(maHH);
-                    int tongSoTien=giaBan*soLuong;
-                    ChiTietHoaDon c=new ChiTietHoaDon(maHD, maHH, tenHH, soLuong, giaBan, tongSoTien);
-                    System.out.println("C:"+ c.toString());
-                   
-                    if(danhSachHoaDon.checkExist(maHD)==false){
-                        HoaDon hh=new HoaDon(maHD, maNV, returnDate(), 0, 0);
-                        System.out.println("You are in here");
-                        hoaDonJDBC.insertIntoDatabase(hh);
-                        listBill=hoaDonJDBC.getDataHoaDon();
-                        danhSachHoaDon.setDanhSachHoaDon(listBill);
+                    String maHD = String.valueOf(maHDTextField.getText());
+                    String maHH = maHangHoaComboBox.getSelectedItem().toString();
+                    if (temporaryDanhSachChiTietHoaDon.validCheck(maHD, maHH) == true) {
+                        JOptionPane.showMessageDialog(this, "Nhap maHD hoac maHH khac");
+                    } else {
+                        String tenHH = danhSachHangHoa.getTenHHFromMaHH(maHH);
+                        int soLuong = Integer.parseInt(soLuongSpinner.getValue().toString());
+                        int giaBan = danhSachHangHoa.getDonGiaFromID(maHH);
+                        int tongSoTien = giaBan * soLuong;
+                        ChiTietHoaDon c = new ChiTietHoaDon(maHD, maHH, tenHH, soLuong, giaBan, tongSoTien);
+                        System.out.println("C:" + c.toString());
+                        if (danhSachHoaDon.checkExist(maHD) == false) {
+                            HoaDon hh = new HoaDon(maHD, maNV, returnDate(), 0, 0);
+                            System.out.println("You are in here");
+                            hoaDonJDBC.insertIntoDatabase(hh);
+                            listBill = hoaDonJDBC.getDataHoaDon();
+                            danhSachHoaDon.setDanhSachHoaDon(listBill);
+                        }
+                        defaultTableModelDetail.setRowCount(0);
+                        temporaryDanhSachChiTietHoaDon.add(c);
+                        displayChiTietHangHoa();
                     }
-                  //  chiTietHoaDonJDBC.insertIntoDatabase(c);
-                    defaultTableModelDetail.setRowCount(0);
-                    temporaryDanhSachChiTietHoaDon.add(c);
-                    displayChiTietHangHoa();
+
                 } catch (Exception ex) {
                     Logger.getLogger(NhanVienBanHangUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
             }
         }
 
@@ -495,14 +540,14 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         String id = maHangHoaComboBox.getSelectedItem().toString();
         System.out.println("ID: " + id);
-        int soLuong=danhSachHangHoa.getSoLuongCuaMotHangHoa(id);
+        int soLuong = danhSachHangHoa.getSoLuongCuaMotHangHoa(id);
         SpinnerModel spinnerModel = new SpinnerNumberModel(0, // initial value
                 0, // min
                 soLuong, // max
                 1);
         soLuongSpinner.setModel(spinnerModel);
         String tenHH = danhSachHangHoa.getTenHHFromMaHH(id);
-        tenHangHoaTextField.setText(tenHH);
+        tenHangHoaLabel.setText(tenHH);
         int giaBan = danhSachHangHoa.getDonGiaFromID(id);
         showCostLabel.setText(giaBan + "");
     }//GEN-LAST:event_maHangHoaComboBoxActionPerformed
@@ -516,32 +561,42 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
         showTotalCostsLabel.setText(tongTien + "");
     }//GEN-LAST:event_soLuongSpinnerStateChanged
 
-    private void tenHangHoaTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tenHangHoaTextFieldActionPerformed
+    private void xoaChiTietHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xoaChiTietHoaDonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_tenHangHoaTextFieldActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+        if(temporaryDanhSachChiTietHoaDon.getSize()!=0){
+            if(clickChiTietHoaDon!=-1){
+                ChiTietHoaDon chiTietHoaDon=temporaryDanhSachChiTietHoaDon.getChiTietHoaDonAtIndex(clickChiTietHoaDon);
+                temporaryDanhSachChiTietHoaDon.delete(chiTietHoaDon);
+                defaultTableModelDetail.setRowCount(0);
+                displayChiTietHangHoa();
+            }
+        }else{
+            JOptionPane.showMessageDialog(this, "No data");
+        }
+        
+    }//GEN-LAST:event_xoaChiTietHoaDonActionPerformed
 
     private void confirmPaymentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmPaymentButtonActionPerformed
         // TODO add your handling code here:
-        if(temporaryDanhSachChiTietHoaDon.getSize()!=0){
+        if (temporaryDanhSachChiTietHoaDon.getSize() != 0) {
             try {
                 for (int i = 0; i < temporaryDanhSachChiTietHoaDon.getSize(); i++) {
                     chiTietHoaDonJDBC.insertIntoDatabase(temporaryDanhSachChiTietHoaDon.getChiTietHoaDonAtIndex(i));
                 }
-                int tongSoLuongHang=temporaryDanhSachChiTietHoaDon.getTotalQuantityOfEachBill();
-                int tongTien=temporaryDanhSachChiTietHoaDon.getTotalCostsOfEachBill();
-                String maHD=String.valueOf(maHDTextField.getText());
-                HoaDon h=new HoaDon(maHD, maNV, returnDate(), tongSoLuongHang, tongTien);
-                hoaDonJDBC.edit(maHD,h);
-                listBill=hoaDonJDBC.getDataHoaDon();
+                int tongSoLuongHang = temporaryDanhSachChiTietHoaDon.getTotalQuantityOfEachBill();
+                int tongTien = temporaryDanhSachChiTietHoaDon.getTotalCostsOfEachBill();
+                String maHD = String.valueOf(maHDTextField.getText());
+                HoaDon h = new HoaDon(maHD, maNV, returnDate(), tongSoLuongHang, tongTien);
+                hoaDonJDBC.edit(maHD, h);
+                listBill = hoaDonJDBC.getDataHoaDon();
                 danhSachHoaDon.setDanhSachHoaDon(listBill);
                 defaultTableModel.setRowCount(0);
                 defaultTableModelDetail.setRowCount(0);
-                temporaryDanhSachChiTietHoaDon=null;
-                System.out.println("SHow Temporary");
+                temporaryDanhSachChiTietHoaDon = new DanhSachChiTietHoaDon();
+//                for (int i = 0; i < temporaryDanhSachChiTietHoaDon.getSize(); i++) {
+//                    System.out.println(temporaryDanhSachChiTietHoaDon.getChiTietHoaDonAtIndex(i).toString());
+//                }
+//                System.out.println("SHow Temporary");
 //                for (ChiTietHoaDon c : temporaryDanhSachChiTietHoaDon.getList()) {
 //                    System.out.println(c.toString());
 //                }
@@ -554,15 +609,89 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         try {
-            // TODO add your handling code here:
-            LogIn logIn=new LogIn();
-            logIn.setVisible(true);
+            StaffUI staffUI=new StaffUI(maNV);
+            staffUI.setVisible(true);
             this.dispose();
         } catch (Exception ex) {
             Logger.getLogger(NhanVienBanHangUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void suaChiTietHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_suaChiTietHoaDonActionPerformed
+        // TODO add your handling code here:
+        if (temporaryDanhSachChiTietHoaDon.getSize() != 0) {
+            if (clickChiTietHoaDon != -1) {
+                try {
+                    ChiTietHoaDon chiTietHoaDon = temporaryDanhSachChiTietHoaDon.getChiTietHoaDonAtIndex(clickChiTietHoaDon);
+                    //showFormChiTietHoaDon(chiTietHoaDon);
+                    ChiTietHoaDon chiTietHoaDon1 = getChiTietHoaDonFromForm();
+                    temporaryDanhSachChiTietHoaDon.edit(chiTietHoaDon, chiTietHoaDon1);
+                    defaultTableModelDetail.setRowCount(0);
+                    displayChiTietHangHoa();
+                    // chiTietHoaDonJDBC.edit(chiTietHoaDon, chiTietHoaDon1);
+                } catch (Exception ex) {
+                    Logger.getLogger(NhanVienBanHangUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+    }//GEN-LAST:event_suaChiTietHoaDonActionPerformed
+
+    private void chiTietTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chiTietTableMouseClicked
+        // TODO add your handling code here:
+        if (temporaryDanhSachChiTietHoaDon.getSize() != 0) {
+            int point = chiTietTable.getSelectedRow();
+            clickChiTietHoaDon = point;
+            if (clickChiTietHoaDon != -1) {
+                ChiTietHoaDon chiTietHoaDon = temporaryDanhSachChiTietHoaDon.getChiTietHoaDonAtIndex(clickChiTietHoaDon);
+                showFormChiTietHoaDon(chiTietHoaDon);
+            }
+        }
+    }//GEN-LAST:event_chiTietTableMouseClicked
+
+    private void resetChiTietHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetChiTietHoaDonActionPerformed
+        // TODO add your handling code here:
+        maHangHoaComboBox.setSelectedIndex(0);
+        String id = maHangHoaComboBox.getSelectedItem().toString();
+        tenHangHoaLabel.setText(danhSachHangHoa.getTenHHFromMaHH(id));
+        soLuongSpinner.setValue(0);
+        showCostLabel.setText("");
+        showTotalCostsLabel.setText("");
+        defaultTableModelDetail.setRowCount(0);
+        displayChiTietHangHoa();
+    }//GEN-LAST:event_resetChiTietHoaDonActionPerformed
+
+    private void findButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findButtonActionPerformed
+        // TODO add your handling code here:
+        if(danhSachHoaDon.getSize()!=0){
+            String id=findTextField.getText();
+            HoaDon hd=danhSachHoaDon.getHoaDonWithID(id);
+            if(hd==null){
+                JOptionPane.showMessageDialog(this, "Not found");
+            }else{
+                defaultTableModel.setRowCount(0);
+                showTable(1, hd);
+            }
+        }else{
+            JOptionPane.showMessageDialog(this, "NO data");
+        }
+    }//GEN-LAST:event_findButtonActionPerformed
+
+    private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
+        // TODO add your handling code here:
+        findTextField.setText("");
+         defaultTableModel.setRowCount(0);
+         display();
+    }//GEN-LAST:event_resetButtonActionPerformed
+
+    private void hoaDonTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hoaDonTableMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_hoaDonTableMouseClicked
+
+    private void hoaDonTableMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hoaDonTableMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_hoaDonTableMouseEntered
 
     /**
      * @param args the command line arguments
@@ -590,15 +719,18 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(NhanVienBanHangUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    NhanVienBanHangUI nhanVienBanHangUI=new NhanVienBanHangUI();
+                    NhanVienBanHangUI nhanVienBanHangUI = new NhanVienBanHangUI();
                     nhanVienBanHangUI.setVisible(true);
-                   // nhanVienBanHangUI.setSize(1400, 1200);
-                    
+                    // nhanVienBanHangUI.setSize(1400, 1200);
+
                 } catch (Exception ex) {
                     Logger.getLogger(NhanVienBanHangUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -609,14 +741,10 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable chiTietTable;
     private javax.swing.JButton confirmPaymentButton;
-    private javax.swing.JButton deleteButton;
     private javax.swing.JLabel donGiaLabel2;
     private javax.swing.JButton findButton;
     private javax.swing.JTextField findTextField;
     private javax.swing.JTable hoaDonTable;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel5;
@@ -629,21 +757,19 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
     private javax.swing.JLabel maNVLabel;
     private javax.swing.JTextField maNVTextField;
     private javax.swing.JLabel ngayBanLabel;
-    private javax.swing.JTextField ngayBanTextField;
+    private javax.swing.JButton resetButton;
+    private javax.swing.JButton resetChiTietHoaDon;
     private javax.swing.JLabel showCostLabel;
+    private javax.swing.JLabel showNgayBanLabel;
     private javax.swing.JLabel showTotalCostsLabel;
     private javax.swing.JSpinner soLuongSpinner;
+    private javax.swing.JButton suaChiTietHoaDon;
     private javax.swing.JLabel tenHHLabel;
-    private javax.swing.JTextField tenHangHoaTextField;
+    private javax.swing.JLabel tenHangHoaLabel;
     private javax.swing.JButton themHangHoaButton;
     private javax.swing.JLabel tongTienLabel;
+    private javax.swing.JButton xoaChiTietHoaDon;
     // End of variables declaration//GEN-END:variables
 
-    private void showComboBox() {
-        ArrayList<String> danhSachMaHH = new ArrayList<>();
-        danhSachMaHH = danhSachHangHoa.getListID();
-        for (String string : danhSachMaHH) {
-            maHangHoaComboBox.addItem(string);
-        }
-    }
+  
 }

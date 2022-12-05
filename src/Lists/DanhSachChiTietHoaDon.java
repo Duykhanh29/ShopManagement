@@ -114,6 +114,27 @@ public class DanhSachChiTietHoaDon {
         }
         return num;
     }
-    
+    public boolean validCheck(String maHD,String maHH){
+        for(int i=0;i<list.size();i++){
+            if(list.get(i).getMaHD().equals(maHD)&&list.get(i).getMaHH().equals(maHH)){
+                return true; 
+            }
+        }
+        return false;
+    }
+    public void edit(ChiTietHoaDon oldH,ChiTietHoaDon newH){
+        for(int i=0;i<list.size();i++){
+            if(list.get(i).getMaHD().equals(oldH.getMaHD())&&list.get(i).getMaHH().equals(oldH.getMaHH())){
+                list.set(i, newH);
+            }
+        }
+    }
+    public void delete(ChiTietHoaDon c){
+         for(int i=0;i<list.size();i++){
+            if(list.get(i).getMaHD().equals(c.getMaHD())&&list.get(i).getMaHH().equals(c.getMaHH())){
+                list.remove(i);
+            }
+        }
+    }
     
 }

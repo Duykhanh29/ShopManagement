@@ -15,6 +15,7 @@ import java.util.Comparator;
  */
 public class DanhSachNhanVien {
 
+   
     public ArrayList<NhanVien> getList() {
         return list;
     }
@@ -30,7 +31,7 @@ public class DanhSachNhanVien {
     public NhanVien getNhanVienAtIndex(int index){
         return list.get(index);
     }
-    public NhanVien getHangHoaWithID(String id){
+    public NhanVien getNhanVienVoiID(String id){
         for (NhanVien nhanVien : list) {
             if(nhanVien.getMaNV().equals(id)){
                 return nhanVien;

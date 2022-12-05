@@ -69,17 +69,17 @@ public class ChiTietHoaDonJDBC {
         }
         connection.close();
     }
-    public void edit(ChiTietHoaDon h,ChiTietHoaDon x) throws Exception{
+    public void edit(ChiTietHoaDon oldH,ChiTietHoaDon newH) throws Exception{
         Connection connection=connectToDatabase.getConnection();
         String sql="update ChiTietHoaDon set maHD=? , maHH= ?, tenHangHoa=? , soLuongHH=? , giaBan=? ,tongSoTien=? where maHD=?";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
-        preparedStatement.setString(1, x.getMaHD());
-        preparedStatement.setString(2, x.getMaHH());
-        preparedStatement.setString(3, x.getTenHangHoa());
-        preparedStatement.setInt(4, x.getSoLuong());
-        preparedStatement.setInt(5, x.getGiaBan());
-        preparedStatement.setDouble(6, x.getTongTien());
-        preparedStatement.setString(7, h.getMaHD());
+        preparedStatement.setString(1, newH.getMaHD());
+        preparedStatement.setString(2, newH.getMaHH());
+        preparedStatement.setString(3, newH.getTenHangHoa());
+        preparedStatement.setInt(4, newH.getSoLuong());
+        preparedStatement.setInt(5, newH.getGiaBan());
+        preparedStatement.setDouble(6, newH.getTongTien());
+        preparedStatement.setString(7, oldH.getMaHD());
         int row=preparedStatement.executeUpdate();
         if(row!=0)
         {

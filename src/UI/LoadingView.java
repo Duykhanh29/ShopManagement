@@ -18,6 +18,7 @@ public class LoadingView extends javax.swing.JFrame {
      */
     public LoadingView() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
