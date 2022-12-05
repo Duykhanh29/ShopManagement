@@ -24,20 +24,23 @@ public class LogIn extends javax.swing.JFrame {
     ArrayList<NhanVien> listStaff = new ArrayList<>();
     NhanVienJDBC nhanVienJDBC;
     TaiKhoanJDBC taiKhoanJDBC;
-    ArrayList<NhanVien> listRole = new ArrayList<>();
+    ArrayList<NhanVien> listNVBH = new ArrayList<>();
+    
+
     /**
      * Creates new form LogIn
      */
-    public LogIn()  throws Exception{
+    public LogIn() throws Exception {
         initComponents();
         danhSachNhanVien = new DanhSachNhanVien();
-        nhanVienJDBC=new NhanVienJDBC();
-        taiKhoanJDBC=new TaiKhoanJDBC();
-        listStaff=nhanVienJDBC.getDataNhanVien();
+        nhanVienJDBC = new NhanVienJDBC();
+        taiKhoanJDBC = new TaiKhoanJDBC();
+        listStaff = nhanVienJDBC.getDataNhanVien();
         danhSachNhanVien.setList(listStaff);
-     //   danhSachNhanVien.insertNhanVien();
+        //   danhSachNhanVien.insertNhanVien();
         nv = new NhanVien();
         showComboBox();
+        this.setLocationRelativeTo(null);
     }
 
     private void showComboBox() {
@@ -124,37 +127,56 @@ public class LogIn extends javax.swing.JFrame {
     private void logInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInButtonActionPerformed
 
         if (String.valueOf(roleComboBox.getSelectedItem()).equals("Nhan vien ban hang")) {
-            listRole = danhSachNhanVien.danhSachNhanVienBanHang();
+            listNVBH = danhSachNhanVien.danhSachNhanVienBanHang();
             boolean value = false;
-            for (int i = 0; i < listRole.size(); i++) {
+            for (int i = 0; i < listNVBH.size(); i++) {
                 String userName = String.valueOf(userNameTextField.getText());
-                if (userName.contains(listRole.get(i).getMaNV())) {
+                String password = String.valueOf(passwordField.getPassword());
+                if (userName.equals(listNVBH.get(i).getMaNV())) {
                     try {
-                        NhanVienBanHangUI newUI = new NhanVienBanHangUI(userName);
-                        //     NhanVienBanHangUI newUI = new NhanVienBanHangUI();
-                        newUI.setVisible(true);
-                        value = true;
-                        this.dispose();
+                        NhanVien nv = danhSachNhanVien.getNhanVienVoiID(userName);
+                        System.out.println("Password: "+nv.getMatKhau());
+                        if (password.equals(nv.getMatKhau())) {
+                           StaffUI satffUI = new StaffUI(userName);
+                           satffUI.setVisible(true);
+                           value = true;
+                           this.dispose();
+                        } else {
+                            value = true;
+                            JOptionPane.showMessageDialog(rootPane, "Khong dung password");
+                        }
+
                     } catch (Exception ex) {
                         Logger.getLogger(LogIn.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
             if (value == false) {
-                JOptionPane.showMessageDialog(this, "Ko dung userName");
+                JOptionPane.showMessageDialog(this, "Khong dung userName");
             }
 
         } else if (String.valueOf(roleComboBox.getSelectedItem()).equals("Nhan vien kho")) {
-            listRole = danhSachNhanVien.danhSachNhanVienKho();
+            listNVBH = danhSachNhanVien.danhSachNhanVienKho();
             boolean value = false;
-            for (int i = 0; i < listRole.size(); i++) {
+            for (int i = 0; i < listNVBH.size(); i++) {
                 String userName = String.valueOf(userNameTextField.getText());
-                if (userName.contains(listRole.get(i).getMaNV())) {
-                    //NhanVienKhoUI newUI = new NhanVienKhoUI(userName);
-                    NhanVienKhoUI newUI = new NhanVienKhoUI(userName);
-                    newUI.setVisible(true);
-                    value = true;
-                    this.dispose();
+                String password = String.valueOf(passwordField.getPassword());
+                if (userName.equals(listNVBH.get(i).getMaNV())) {
+                    NhanVien nv = danhSachNhanVien.getNhanVienVoiID(userName);
+                    if (password.equals(nv.getMatKhau())) {
+                        try {
+                            StaffUI satffUI = new StaffUI(userName);
+                            satffUI.setVisible(true);
+                            value = true;
+                            this.dispose();
+                        } catch (Exception ex) {
+                            Logger.getLogger(LogIn.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        value = true;
+                        JOptionPane.showMessageDialog(rootPane, "Khong dung password");
+                    }
+
                 }
             }
             if (value == false) {
@@ -162,15 +184,24 @@ public class LogIn extends javax.swing.JFrame {
             }
 
         } else if (String.valueOf(roleComboBox.getSelectedItem()).equals("Quan ly")) {
-            listRole = danhSachNhanVien.danhSachQuanLy();
+            listNVBH = danhSachNhanVien.danhSachQuanLy();
             boolean value = false;
-            for (int i = 0; i < listRole.size(); i++) {
-                if (String.valueOf(userNameTextField.getText()).contains(listRole.get(i).getMaNV())) {
+            String userName = String.valueOf(userNameTextField.getText());
+            for (int i = 0; i < listNVBH.size(); i++) {
+                if (userName.equals(listNVBH.get(i).getMaNV())) {
                     try {
-                        AdminUI newUI = new AdminUI();
-                        newUI.setVisible(true);
-                        value = true;
-                        this.dispose();
+                        String password = String.valueOf(passwordField.getPassword());
+                        NhanVien nv = danhSachNhanVien.getNhanVienVoiID(userName);
+                        if (password.equals(nv.getMatKhau())) {
+                            ManagerUI managerUI = new ManagerUI(userName);
+                            managerUI.setVisible(true);
+                            value = true;
+                            this.dispose();
+                        } else {
+                            JOptionPane.showMessageDialog(rootPane, "Khong dung password");
+                            value = true;
+                        }
+
                     } catch (Exception ex) {
                         Logger.getLogger(LogIn.class.getName()).log(Level.SEVERE, null, ex);
                     }
