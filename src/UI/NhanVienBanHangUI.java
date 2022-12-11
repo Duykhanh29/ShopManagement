@@ -583,6 +583,14 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
                 for (int i = 0; i < temporaryDanhSachChiTietHoaDon.getSize(); i++) {
                     chiTietHoaDonJDBC.insertIntoDatabase(temporaryDanhSachChiTietHoaDon.getChiTietHoaDonAtIndex(i));
                 }
+                
+                // update so luong hang cua tung mat hang sau khi ban
+                for (int i = 0; i < temporaryDanhSachChiTietHoaDon.getSize(); i++) {
+                    String code=temporaryDanhSachChiTietHoaDon.getChiTietHoaDonAtIndex(i).getMaHH();
+                    int newQuantity=temporaryDanhSachChiTietHoaDon.getChiTietHoaDonAtIndex(i).getSoLuong();
+                    int oleQuantity=danhSachHangHoa.getHangHoaWithID(code).getSoLuong();
+                    hangHoaJDBC.update(code,oleQuantity,newQuantity);
+                }
                 int tongSoLuongHang = temporaryDanhSachChiTietHoaDon.getTotalQuantityOfEachBill();
                 int tongTien = temporaryDanhSachChiTietHoaDon.getTotalCostsOfEachBill();
                 String maHD = String.valueOf(maHDTextField.getText());
@@ -593,13 +601,8 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
                 defaultTableModel.setRowCount(0);
                 defaultTableModelDetail.setRowCount(0);
                 temporaryDanhSachChiTietHoaDon = new DanhSachChiTietHoaDon();
-//                for (int i = 0; i < temporaryDanhSachChiTietHoaDon.getSize(); i++) {
-//                    System.out.println(temporaryDanhSachChiTietHoaDon.getChiTietHoaDonAtIndex(i).toString());
-//                }
-//                System.out.println("SHow Temporary");
-//                for (ChiTietHoaDon c : temporaryDanhSachChiTietHoaDon.getList()) {
-//                    System.out.println(c.toString());
-//                }
+                listHangHoa=hangHoaJDBC.getDataHangHoa();
+                danhSachHangHoa.setList(listHangHoa);
                 display();
             } catch (Exception ex) {
                 Logger.getLogger(NhanVienBanHangUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -658,6 +661,7 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
         soLuongSpinner.setValue(0);
         showCostLabel.setText("");
         showTotalCostsLabel.setText("");
+        findTextField.setText("");
         defaultTableModelDetail.setRowCount(0);
         displayChiTietHangHoa();
     }//GEN-LAST:event_resetChiTietHoaDonActionPerformed

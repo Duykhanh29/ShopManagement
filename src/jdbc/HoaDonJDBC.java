@@ -75,7 +75,7 @@ public class HoaDonJDBC {
     }
     public void edit(HoaDon h,HoaDon x) throws Exception{
         Connection connection=connectToDatabase.getConnection();
-        String sql="update HoaDon set maHD=? , maNV=? , thoiGian=? ,soLuong=?, tongTien=? where maHD=?";
+        String sql="update HoaDon set maHD=? , maNV=? , thoiGian=? ,tongSoLuong=?, tongTien=? where maHD=?";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
         preparedStatement.setString(1, x.getMaHD());
 //        preparedStatement.setString(2, x.getMaHangHoa());
@@ -130,4 +130,5 @@ public class HoaDonJDBC {
         }
         connection.close();
     }
+  
 }

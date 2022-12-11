@@ -85,5 +85,20 @@ public class HangHoaJDBC {
             System.out.println("\tEdit unsuccessfully");
         }
         connection.close();
+    } 
+    public void update(String code,int oldQuantity,int newQuantity)throws Exception{
+        Connection connection=connectToDatabase.getConnection();
+        String sql="update HangHoa set soLuong=? where maHH=?";
+        PreparedStatement preparedStatement=connection.prepareStatement(sql);
+        preparedStatement.setInt(1, oldQuantity-newQuantity);
+        preparedStatement.setString(2, code);
+        int row=preparedStatement.executeUpdate();
+        if(row!=0)
+        {
+            System.out.println("\tEdit successfully");
+        }else{
+            System.out.println("\tEdit unsuccessfully");
+        }
+        connection.close();
     }
 }
