@@ -4,14 +4,16 @@
  */
 package UI;
 
+import model.Goods;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import File.*;
 import Lists.DanhSachHangHoa;
 import java.util.ArrayList;
 import jdbc.*;
-import dinhnghia.*;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import File.*;
 /**
  *
  * @author Admin
@@ -21,27 +23,98 @@ public class NhanVienKhoUI extends javax.swing.JFrame {
     /**
      * Creates new form NhanVienKhoUI
      */
+    GoodsFileIO goodsFileIO;
     DanhSachHangHoa danhSachHangHoa;
     HangHoaJDBC hangHoaJDBC;
-    ArrayList<HangHoa> listHangHoa=new ArrayList<>();
-    FileIO fileIO=new FileIO();
+    ArrayList<Goods> listHangHoa = new ArrayList<>();
+    FileIO fileIO = new FileIO();
     String maNV;
-    String fileName="thongBao.txt";
-    public NhanVienKhoUI(String dataController) {
-        danhSachHangHoa=new DanhSachHangHoa();
-        hangHoaJDBC=new HangHoaJDBC();
+    DefaultTableModel defaultTableModel;
+    int click = -1;
+
+    public NhanVienKhoUI(String dataController) throws Exception {
+        goodsFileIO=new GoodsFileIO();
+        danhSachHangHoa = new DanhSachHangHoa();
+        danhSachHangHoa.setList(listHangHoa);
+        hangHoaJDBC = new HangHoaJDBC();
+        listHangHoa = hangHoaJDBC.getDataHangHoa();
+        danhSachHangHoa.setList(listHangHoa);
+        goodsFileIO.writeDataFromFile(goodsFileIO.fileGoods, listHangHoa);
         initComponents();
-        maNV=dataController;
+        maNV = dataController;
+        defaultTableModel = (DefaultTableModel) goodsTable.getModel();
         this.setLocationRelativeTo(null);
-       // maNV=dataController;
+        display();
     }
 
     private NhanVienKhoUI() {
     }
-   
 
-//    private NhanVienKhoUI() {
-//    }
+    public void display() {
+        for (int i = 0; i < listHangHoa.size(); i++) {
+            showTable((i + 1), listHangHoa.get(i));
+        }
+    }
+
+    public void showTable(int index, Goods h) {
+        defaultTableModel.addRow(new Object[]{
+            index, h.getGoodsID(), h.getGoodsName(), h.getProducer(), h.getQuantity(), h.getImportedCost(), h.getSellingCost()
+        });
+    }
+
+    public boolean emptyCheck() {
+        if (idTextField.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Input id");
+            idTextField.requestFocus();
+            return true;
+        }
+        if (nameTextField.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Input name");
+            nameTextField.requestFocus();
+            return true;
+        }
+        if (producerTextField.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Input producer");
+            producerTextField.requestFocus();
+            return true;
+        }
+        if (Integer.parseInt(quantitySpinner.getValue().toString()) == 0) {
+            JOptionPane.showMessageDialog(rootPane, "Input quantity");
+            quantitySpinner.requestFocus();
+            return true;
+        }
+        if (Integer.parseInt(importedCostTextField.getText()) == 0 || importedCostTextField.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Input imported Cost");
+            importedCostTextField.requestFocus();
+            return true;
+        }
+        if (Integer.parseInt(sellingCostTextField.getText()) == 0 || sellingCostTextField.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Input selling Cost");
+            sellingCostTextField.requestFocus();
+            return true;
+        }
+        return false;
+    }
+
+    public void showFormGoods(Goods h) {
+        idTextField.setText(h.getGoodsID());
+        nameTextField.setText(h.getGoodsName());
+        producerTextField.setText(h.getProducer());
+        quantitySpinner.setValue(h.getQuantity());
+        sellingCostTextField.setText(h.getSellingCost()+ "");
+        importedCostTextField.setText(h.getImportedCost()+"");
+    }
+
+    public Goods getGoodsFromForm() {
+        Goods h = new Goods();
+        h.setSellingCost(Integer.parseInt(sellingCostTextField.getText()));
+        h.setImportedCost(Integer.parseInt(importedCostTextField.getText()));
+        h.setQuantity(Integer.parseInt(quantitySpinner.getValue().toString()));
+        h.setGoodsID(idTextField.getText());
+        h.setGoodsName(nameTextField.getText());
+        h.setProducer(producerTextField.getText());
+        return h;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -53,64 +126,94 @@ public class NhanVienKhoUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel32 = new javax.swing.JLabel();
-        maHHTextField5 = new javax.swing.JTextField();
+        idTextField = new javax.swing.JTextField();
         jLabel33 = new javax.swing.JLabel();
-        tenHHTextField5 = new javax.swing.JTextField();
+        nameTextField = new javax.swing.JTextField();
         jLabel34 = new javax.swing.JLabel();
         jLabel35 = new javax.swing.JLabel();
-        nhaCungCapTextField5 = new javax.swing.JTextField();
-        giaNhapTextField5 = new javax.swing.JTextField();
+        producerTextField = new javax.swing.JTextField();
+        importedCostTextField = new javax.swing.JTextField();
         jLabel36 = new javax.swing.JLabel();
-        soLuongSpinner5 = new javax.swing.JSpinner();
+        quantitySpinner = new javax.swing.JSpinner();
         jLabel37 = new javax.swing.JLabel();
-        giaBanTextField5 = new javax.swing.JTextField();
-        jButton16 = new javax.swing.JButton();
-        jButton17 = new javax.swing.JButton();
-        jButton18 = new javax.swing.JButton();
+        sellingCostTextField = new javax.swing.JTextField();
+        deleteButton = new javax.swing.JButton();
+        editButton = new javax.swing.JButton();
+        insertButton = new javax.swing.JButton();
         jScrollPane8 = new javax.swing.JScrollPane();
-        jTable6 = new javax.swing.JTable();
+        goodsTable = new javax.swing.JTable();
         jButton19 = new javax.swing.JButton();
+        resetButton = new javax.swing.JButton();
+        searchTextField = new javax.swing.JTextField();
+        searchButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel32.setText("Ma HH");
+        jLabel32.setText("ID");
 
-        jLabel33.setText("Ten HH");
-
-        jLabel34.setText("Nha Cung Cap");
-
-        jLabel35.setText("Gia Nhap");
-
-        nhaCungCapTextField5.addActionListener(new java.awt.event.ActionListener() {
+        idTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nhaCungCapTextField5nhaCungCapTextFieldActionPerformed(evt);
+                idTextFieldActionPerformed(evt);
             }
         });
 
-        jLabel36.setText("So Luong");
+        jLabel33.setText("Name");
 
-        jLabel37.setText("Gia Ban");
+        jLabel34.setText("Producer");
 
-        jButton16.setText("Xoa");
+        jLabel35.setText("Imported Cost");
 
-        jButton17.setText("Sua");
-
-        jButton18.setText("Them");
-        jButton18.addActionListener(new java.awt.event.ActionListener() {
+        producerTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton18jButton1ActionPerformed(evt);
+                producerTextFieldnhaCungCapTextFieldActionPerformed(evt);
             }
         });
 
-        jTable6.setModel(new javax.swing.table.DefaultTableModel(
+        jLabel36.setText("Quantity");
+
+        quantitySpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
+
+        jLabel37.setText("Selling Cost");
+
+        deleteButton.setText("Delete");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
+
+        editButton.setText("Edit");
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editButtonActionPerformed(evt);
+            }
+        });
+
+        insertButton.setText("Insert");
+        insertButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                insertButtonjButton1ActionPerformed(evt);
+            }
+        });
+
+        goodsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "STT", "Ma HH", "Ten HH", "Nha Cung Cap", "Gia Nhap", "Gia Ban", "So Luong"
+                "No.", "Id", "Name", "Producer", "Quantity", "Imported Cost", "Seling Cost"
             }
         ));
-        jScrollPane8.setViewportView(jTable6);
+        goodsTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                goodsTableMouseClicked(evt);
+            }
+        });
+        jScrollPane8.setViewportView(goodsTable);
+        if (goodsTable.getColumnModel().getColumnCount() > 0) {
+            goodsTable.getColumnModel().getColumn(0).setPreferredWidth(15);
+            goodsTable.getColumnModel().getColumn(4).setPreferredWidth(20);
+        }
 
         jButton19.setText("Back");
         jButton19.addActionListener(new java.awt.event.ActionListener() {
@@ -119,22 +222,27 @@ public class NhanVienKhoUI extends javax.swing.JFrame {
             }
         });
 
+        resetButton.setText("reset");
+        resetButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetButtonActionPerformed(evt);
+            }
+        });
+
+        searchButton.setText("Search");
+        searchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(52, 52, 52)
-                .addComponent(jScrollPane8)
-                .addGap(57, 57, 57))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(149, 149, 149)
-                .addComponent(jButton18, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(165, 165, 165)
-                .addComponent(jButton17, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton16, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(184, 184, 184))
+                .addComponent(jButton19)
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -143,32 +251,53 @@ public class NhanVienKhoUI extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(maHHTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(idTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(281, 281, 281)
                                 .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(43, 43, 43)
-                        .addComponent(nhaCungCapTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(producerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(36, 36, 36)
                         .addComponent(jLabel36, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(57, 57, 57)
-                        .addComponent(soLuongSpinner5, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(quantitySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel33, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(tenHHTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(39, 39, 39)
                         .addComponent(jLabel35, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(giaNhapTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(importedCostTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(30, 30, 30)
                         .addComponent(jLabel37, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(giaBanTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(sellingCostTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(51, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jButton19)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(52, 52, 52)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane8)
+                        .addGap(57, 57, 57))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(165, 165, 165)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(insertButton, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(resetButton, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(106, 106, 106)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(240, 240, 240))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(19, 19, 19)
+                                .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -177,28 +306,34 @@ public class NhanVienKhoUI extends javax.swing.JFrame {
                 .addGap(38, 38, 38)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(maHHTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(idTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(nhaCungCapTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(producerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel36, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(soLuongSpinner5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(quantitySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel33, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tenHHTextField5, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(nameTextField, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel35, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(giaNhapTextField5, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(importedCostTextField, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel37, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(giaBanTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                        .addComponent(jLabel37, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(sellingCostTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton18, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton17, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton16, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(37, 37, 37)
+                    .addComponent(insertButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(resetButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(39, 39, 39)
                 .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33))
         );
@@ -206,24 +341,141 @@ public class NhanVienKhoUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void nhaCungCapTextField5nhaCungCapTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nhaCungCapTextField5nhaCungCapTextFieldActionPerformed
+    private void producerTextFieldnhaCungCapTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_producerTextFieldnhaCungCapTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_nhaCungCapTextField5nhaCungCapTextFieldActionPerformed
+    }//GEN-LAST:event_producerTextFieldnhaCungCapTextFieldActionPerformed
 
-    private void jButton18jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton18jButton1ActionPerformed
+    private void insertButtonjButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertButtonjButton1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton18jButton1ActionPerformed
+        if (emptyCheck() == false) {
+            try {
+                String id = idTextField.getText();
+                if (danhSachHangHoa.checkExist(id) == false) {
+                    String producer = producerTextField.getText();
+                    String name = nameTextField.getText();
+                    int quantity = Integer.parseInt(quantitySpinner.getValue().toString());
+                    int importedCost = Integer.parseInt(importedCostTextField.getText());
+                    int sellingCost = Integer.parseInt(sellingCostTextField.getText());
+                    Goods h = new Goods(id, name, name, quantity, importedCost, sellingCost);
+                    hangHoaJDBC.insertIntoDatabase(h);
+                    listHangHoa=hangHoaJDBC.getDataHangHoa();
+                    goodsFileIO.writeDataFromFile(goodsFileIO.fileGoods, listHangHoa);
+                    defaultTableModel.setRowCount(0);
+                    danhSachHangHoa.setList(listHangHoa);
+                    display();
+                } else {
+                    
+                    JOptionPane.showMessageDialog(rootPane, "Please input other id");
+                }
+
+            } catch (Exception ex) {
+                Logger.getLogger(NhanVienKhoUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_insertButtonjButton1ActionPerformed
 
     private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
         try {
             // TODO add your handling code here:
-            StaffUI staffUI=new StaffUI(maNV);
+            StaffUI staffUI = new StaffUI(maNV);
             staffUI.setVisible(true);
             this.dispose();
         } catch (Exception ex) {
             Logger.getLogger(NhanVienKhoUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton19ActionPerformed
+
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        // TODO add your handling code here:
+        if (emptyCheck() == false) {
+            if (click != -1) {
+                try {
+                    Goods oldH = danhSachHangHoa.getGoodsAtIndex(click);
+                    Goods newHH = getGoodsFromForm();
+                    hangHoaJDBC.edit(oldH, newHH);
+                    listHangHoa = hangHoaJDBC.getDataHangHoa();
+                    goodsFileIO.writeDataFromFile(goodsFileIO.fileGoods, listHangHoa);
+                    danhSachHangHoa.setList(listHangHoa);
+                    defaultTableModel.setRowCount(0);
+                    display();
+                } catch (Exception ex) {
+                    Logger.getLogger(NhanVienKhoUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        }
+    }//GEN-LAST:event_editButtonActionPerformed
+
+    private void goodsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_goodsTableMouseClicked
+        // TODO add your handling code here:
+        if (listHangHoa.size() != 0) {
+            int point = goodsTable.getSelectedRow();
+            click = point;
+            if (click != -1) {
+                Goods h = danhSachHangHoa.getGoodsAtIndex(click);
+                showFormGoods(h);
+            }
+        }
+    }//GEN-LAST:event_goodsTableMouseClicked
+
+    private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
+        // TODO add your handling code here:
+        idTextField.setText("");
+        nameTextField.setText("");
+        producerTextField.setText("");
+        quantitySpinner.setValue(0);
+        importedCostTextField.setText("");
+        sellingCostTextField.setText("");
+        searchTextField.setText("");
+        defaultTableModel.setRowCount(0);
+        display();
+    }//GEN-LAST:event_resetButtonActionPerformed
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        // TODO add your handling code here:
+        if (listHangHoa.size() != 0) {
+            if (click != -1) {
+                try {
+                    Goods h = danhSachHangHoa.getGoodsAtIndex(click);
+                    hangHoaJDBC.delete(h);
+                    listHangHoa = hangHoaJDBC.getDataHangHoa();
+                    danhSachHangHoa.setList(listHangHoa);
+                    goodsFileIO.writeDataFromFile(goodsFileIO.fileGoods, listHangHoa);
+                    defaultTableModel.setRowCount(0);
+                    display();
+                } catch (Exception ex) {
+                    Logger.getLogger(NhanVienKhoUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "No data");
+        }
+    }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+        // TODO add your handling code here:
+        if (listHangHoa.size() != 0) {
+            String id = searchTextField.getText();
+            if (id.equals("")) {
+                JOptionPane.showMessageDialog(rootPane, "Please input id");
+            } else {
+                Goods h = danhSachHangHoa.getGoodsWithID(id);
+                if (h != null) {
+                    showFormGoods(h);
+                    defaultTableModel.setRowCount(0);
+                    showTable(1, h);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Not found");
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "No data");
+        }
+    }//GEN-LAST:event_searchButtonActionPerformed
+
+    private void idTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_idTextFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -261,113 +513,26 @@ public class NhanVienKhoUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField giaBanTextField;
-    private javax.swing.JTextField giaBanTextField1;
-    private javax.swing.JTextField giaBanTextField2;
-    private javax.swing.JTextField giaBanTextField3;
-    private javax.swing.JTextField giaBanTextField4;
-    private javax.swing.JTextField giaBanTextField5;
-    private javax.swing.JTextField giaNhapTextField;
-    private javax.swing.JTextField giaNhapTextField1;
-    private javax.swing.JTextField giaNhapTextField2;
-    private javax.swing.JTextField giaNhapTextField3;
-    private javax.swing.JTextField giaNhapTextField4;
-    private javax.swing.JTextField giaNhapTextField5;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton14;
-    private javax.swing.JButton jButton15;
-    private javax.swing.JButton jButton16;
-    private javax.swing.JButton jButton17;
-    private javax.swing.JButton jButton18;
+    private javax.swing.JButton deleteButton;
+    private javax.swing.JButton editButton;
+    private javax.swing.JTable goodsTable;
+    private javax.swing.JTextField idTextField;
+    private javax.swing.JTextField importedCostTextField;
+    private javax.swing.JButton insertButton;
     private javax.swing.JButton jButton19;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel29;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel30;
-    private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel37;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
-    private javax.swing.JTable jTable4;
-    private javax.swing.JTable jTable5;
-    private javax.swing.JTable jTable6;
-    private javax.swing.JTextField maHHTextField;
-    private javax.swing.JTextField maHHTextField1;
-    private javax.swing.JTextField maHHTextField2;
-    private javax.swing.JTextField maHHTextField3;
-    private javax.swing.JTextField maHHTextField4;
-    private javax.swing.JTextField maHHTextField5;
-    private javax.swing.JTextField nhaCungCapTextField;
-    private javax.swing.JTextField nhaCungCapTextField1;
-    private javax.swing.JTextField nhaCungCapTextField2;
-    private javax.swing.JTextField nhaCungCapTextField3;
-    private javax.swing.JTextField nhaCungCapTextField4;
-    private javax.swing.JTextField nhaCungCapTextField5;
-    private javax.swing.JSpinner soLuongSpinner;
-    private javax.swing.JSpinner soLuongSpinner1;
-    private javax.swing.JSpinner soLuongSpinner2;
-    private javax.swing.JSpinner soLuongSpinner3;
-    private javax.swing.JSpinner soLuongSpinner4;
-    private javax.swing.JSpinner soLuongSpinner5;
-    private javax.swing.JTextField tenHHTextField;
-    private javax.swing.JTextField tenHHTextField1;
-    private javax.swing.JTextField tenHHTextField2;
-    private javax.swing.JTextField tenHHTextField3;
-    private javax.swing.JTextField tenHHTextField4;
-    private javax.swing.JTextField tenHHTextField5;
+    private javax.swing.JTextField nameTextField;
+    private javax.swing.JTextField producerTextField;
+    private javax.swing.JSpinner quantitySpinner;
+    private javax.swing.JButton resetButton;
+    private javax.swing.JButton searchButton;
+    private javax.swing.JTextField searchTextField;
+    private javax.swing.JTextField sellingCostTextField;
     // End of variables declaration//GEN-END:variables
 }

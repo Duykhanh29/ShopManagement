@@ -4,13 +4,14 @@
  */
 package UI;
 
+import model.Staff;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Lists.*;
-import dinhnghia.*;
 import java.util.ArrayList;
 import jdbc.*;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author Admin
@@ -20,22 +21,22 @@ public class ManagerUI extends javax.swing.JFrame {
     /**
      * Creates new form ManagerUI
      */
-    
     String maNV;
     NhanVienJDBC nhanVienJDBC;
     DanhSachNhanVien danhSachNhanVien;
-    ArrayList<NhanVien> listStaff=new ArrayList<>();
-    NhanVien thisManager=new NhanVien();
-    public ManagerUI(String dataController) throws Exception{
-        nhanVienJDBC=new NhanVienJDBC();
-        danhSachNhanVien=new DanhSachNhanVien();
-        listStaff=nhanVienJDBC.getDataNhanVien();
+    ArrayList<Staff> listStaff = new ArrayList<>();
+    Staff thisManager = new Staff();
+
+    public ManagerUI(String dataController) throws Exception {
+        nhanVienJDBC = new NhanVienJDBC();
+        danhSachNhanVien = new DanhSachNhanVien();
+        listStaff = nhanVienJDBC.getDataNhanVien();
         danhSachNhanVien.setList(listStaff);
-        maNV=dataController;
-        thisManager=danhSachNhanVien.getNhanVienVoiID(maNV);
+        maNV = dataController;
+        thisManager = danhSachNhanVien.getStaffWithID(maNV);
         initComponents();
         this.setLocationRelativeTo(null);
-        showInforLabel.setText(maNV+" - "+thisManager.getTenNV());
+        showInforLabel.setText(maNV + " - " + thisManager.getStaffName());
     }
 
     private ManagerUI() {
@@ -141,46 +142,57 @@ public class ManagerUI extends javax.swing.JFrame {
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
         try {
             // TODO add your handling code here:
-            LogIn logIn=new LogIn();
+            LogIn logIn = new LogIn();
             logIn.setVisible(true);
             this.dispose();
         } catch (Exception ex) {
             Logger.getLogger(ManagerUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-                
+
+
     }//GEN-LAST:event_logOutButtonActionPerformed
 
     private void homeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeButtonActionPerformed
         try {
             // TODO add your handling code here:
-            AdminUI adminUI=new AdminUI(maNV);
+            AdminUI adminUI = new AdminUI(maNV);
             adminUI.setVisible(true);
             this.dispose();
         } catch (Exception ex) {
             Logger.getLogger(ManagerUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_homeButtonActionPerformed
 
     private void changePasswordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changePasswordButtonActionPerformed
         // TODO add your handling code here:
-        String oldPass,newPass;
-        oldPass=JOptionPane.showInputDialog("Input current password");
-        System.out.println("Old"+oldPass);
-        NhanVien nv=danhSachNhanVien.getNhanVienVoiID(maNV);
-        System.out.println("MK"+nv.getMatKhau());
-        if(oldPass.equals(nv.getMatKhau())){
-            try {
-                newPass=JOptionPane.showInputDialog("Input new password");
-                nhanVienJDBC.changePassword(maNV, newPass);
-            } catch (Exception ex) {
-                Logger.getLogger(ManagerUI.class.getName()).log(Level.SEVERE, null, ex);
+
+        String oldPass, newPass;
+        oldPass = JOptionPane.showInputDialog("Input current password");
+        if (oldPass != null && oldPass.equals("") == false) {
+            System.out.println("Old" + oldPass);
+            Staff nv = danhSachNhanVien.getStaffWithID(maNV);
+            System.out.println("MK" + nv.getPassword());
+            if (oldPass.equals(nv.getPassword())) {
+                try {
+                    newPass = JOptionPane.showInputDialog("Input new password");
+                    if (newPass == null) {
+                        // JOptionPane.showMessageDialog(rootPane, "Nothing change");
+                    } else if (newPass.equals("")) {
+                        // JOptionPane.showMessageDialog(rootPane, "Nothing change");
+                    } else {
+                        nhanVienJDBC.changePassword(maNV, newPass);
+                    }
+                } catch (Exception ex) {
+                    Logger.getLogger(ManagerUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "You input wrong password");
             }
-          
-        }else{
-           JOptionPane.showMessageDialog(rootPane, "You input wrong password");
         }
+
+
     }//GEN-LAST:event_changePasswordButtonActionPerformed
 
     /**

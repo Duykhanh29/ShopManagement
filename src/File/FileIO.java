@@ -25,41 +25,27 @@ public class FileIO {
 
     File file;
 
-    /*
-    public void write(String namePath,String string)
-    {
-        file=new File(namePath);
-        FileOutputStream fileOutputStream=null;
-        ObjectOutputStream objectOutputStream=null;
-        BufferedReader bufferedReader;
-        try {
-            fileOutputStream=new FileOutputStream(file);
-            objectOutputStream=new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(string);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally{
-            try {
-                objectOutputStream.close();
-                fileOutputStream.close();
-            } catch (Exception e) {
-            }
-        }
-    }
-    public String read(String namePath)
-    {
-        file=new File(namePath);
-        String result;
-        FileInputStream fileInputStream=null;
-        ObjectInputStream objectInputStream=null;
-        try {
-            fileInputStream=new FileInputStream(file);
-            objectInputStream=new ObjectInputStream(fileInputStream);
-        } catch (Exception e) {
-        }
-        return "fdaf";
-    }
-     */
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+   
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     public void writeData(String namePath, String string) {
         file = new File(namePath);
         FileWriter fileWriter = null;

@@ -34,40 +34,37 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="maNVLabel" max="32767" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="maNVTextField" min="-2" pref="129" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="507" max="-2" attributes="0"/>
-                          </Group>
                           <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <Component id="maHDLabel" min="-2" pref="49" max="-2" attributes="0"/>
+                              <Component id="maHDLabel" min="-2" pref="49" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="maHDTextField" min="-2" pref="129" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="maNVLabel" max="32767" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="maHDTextField" min="-2" pref="129" max="-2" attributes="0"/>
+                                      <Component id="showStaffID" min="-2" pref="95" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="102" attributes="0">
-                                      <Component id="findTextField" min="-2" pref="150" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="findButton" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="findTextField" min="-2" pref="150" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="204" max="-2" attributes="0"/>
-                                      <Component id="resetButton" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="153" max="-2" attributes="0"/>
-                                      <Component id="ngayBanLabel" min="-2" pref="59" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="showNgayBanLabel" min="-2" pref="130" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <EmptySpace min="-2" pref="103" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="findButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="204" max="-2" attributes="0"/>
+                              <Component id="resetButton" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="153" max="-2" attributes="0"/>
+                              <Component id="ngayBanLabel" min="-2" pref="59" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="showDateLabel" min="-2" pref="130" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace min="-2" pref="103" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -82,25 +79,25 @@
                                               <EmptySpace min="-2" pref="169" max="-2" attributes="0"/>
                                               <Component id="confirmPaymentButton" min="-2" max="-2" attributes="0"/>
                                           </Group>
-                                          <Group type="102" alignment="1" attributes="0">
-                                              <Component id="tenHangHoaLabel" min="-2" pref="171" max="-2" attributes="0"/>
-                                              <EmptySpace max="32767" attributes="0"/>
-                                              <Component id="tongTienLabel" min="-2" pref="70" max="-2" attributes="0"/>
+                                          <Group type="102" attributes="0">
+                                              <Component id="goodsNameLabel" min="-2" pref="171" max="-2" attributes="0"/>
+                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Component id="tongTienLabel" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="showTotalCostsLabel" min="-2" pref="169" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
-                                      <Component id="maHangHoaComboBox" min="-2" pref="115" max="-2" attributes="0"/>
+                                      <Component id="goodsIDComboBox" min="-2" pref="115" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="donGiaLabel2" min="-2" pref="54" max="-2" attributes="0"/>
-                                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                                      <Component id="showCostLabel" min="-2" pref="121" max="-2" attributes="0"/>
+                                      <Component id="donGiaLabel2" min="-2" pref="66" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="showCostLabel" min="-2" pref="103" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jLabel5" min="-2" pref="72" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="soLuongSpinner" min="-2" pref="93" max="-2" attributes="0"/>
+                                      <Component id="quantitySpinner" min="-2" pref="93" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
@@ -147,13 +144,13 @@
                       <Component id="maHDTextField" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
                       <Component id="ngayBanLabel" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
                       <Component id="maHHLabel" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
-                      <Component id="maHangHoaComboBox" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
+                      <Component id="goodsIDComboBox" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
                       <Component id="donGiaLabel2" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
-                      <Component id="showNgayBanLabel" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
+                      <Component id="showDateLabel" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
                   </Group>
                   <Component id="showCostLabel" max="32767" attributes="0"/>
                   <Component id="jLabel5" alignment="0" max="32767" attributes="0"/>
-                  <Component id="soLuongSpinner" alignment="0" max="32767" attributes="0"/>
+                  <Component id="quantitySpinner" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" max="-2" attributes="0">
@@ -162,8 +159,8 @@
                       <Component id="tenHHLabel" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                       <Component id="tongTienLabel" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                       <Component id="maNVLabel" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
-                      <Component id="maNVTextField" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
-                      <Component id="tenHangHoaLabel" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                      <Component id="goodsNameLabel" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                      <Component id="showStaffID" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -203,13 +200,19 @@
   <SubComponents>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Segoe UI" size="24" style="3"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="0" green="0" red="ff" type="rgb"/>
+        </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="Hoa Don Ban Hang"/>
+        <Property name="text" type="java.lang.String" value="BILL"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="maHDLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Ma HD"/>
+        <Property name="text" type="java.lang.String" value="Bill ID"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="maHDTextField">
@@ -219,17 +222,12 @@
     </Component>
     <Component class="javax.swing.JLabel" name="maNVLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="MA NV"/>
+        <Property name="text" type="java.lang.String" value="Staff ID"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="maNVTextField">
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="maNVTextFieldActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="ngayBanLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Ngay Ban"/>
+        <Property name="text" type="java.lang.String" value="Date"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -244,16 +242,16 @@
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="6" rowCount="0">
                 <Column editable="true" title="No." type="java.lang.Object"/>
-                <Column editable="true" title="MaHD" type="java.lang.Object"/>
-                <Column editable="true" title="MaNV" type="java.lang.Object"/>
-                <Column editable="true" title="ThoiGian" type="java.lang.Object"/>
-                <Column editable="true" title="TongSoLuong" type="java.lang.Object"/>
-                <Column editable="true" title="TongTien" type="java.lang.Object"/>
+                <Column editable="true" title="Bill ID" type="java.lang.Object"/>
+                <Column editable="true" title="Staff ID" type="java.lang.Object"/>
+                <Column editable="true" title="Time" type="java.lang.Object"/>
+                <Column editable="true" title="Total quantity" type="java.lang.Object"/>
+                <Column editable="true" title="Total Costs" type="java.lang.Object"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
               <TableColumnModel selectionModel="0">
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                <Column maxWidth="-1" minWidth="-1" prefWidth="15" resizable="true">
                   <Title/>
                   <Editor/>
                   <Renderer/>
@@ -308,7 +306,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="themHangHoaButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Them Hang Hoa"/>
+        <Property name="text" type="java.lang.String" value="Add Goods"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="themHangHoaButtonActionPerformed"/>
@@ -316,17 +314,17 @@
     </Component>
     <Component class="javax.swing.JLabel" name="maHHLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Ma Hang Hoa"/>
+        <Property name="text" type="java.lang.String" value="Goods ID"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JComboBox" name="maHangHoaComboBox">
+    <Component class="javax.swing.JComboBox" name="goodsIDComboBox">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="0"/>
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="maHangHoaComboBoxActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="goodsIDComboBoxActionPerformed"/>
       </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -334,7 +332,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="donGiaLabel2">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Don Gia"/>
+        <Property name="text" type="java.lang.String" value="Selling Cost"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="showCostLabel">
@@ -342,27 +340,27 @@
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="So Luong"/>
+        <Property name="text" type="java.lang.String" value="Quantity"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JSpinner" name="soLuongSpinner">
+    <Component class="javax.swing.JSpinner" name="quantitySpinner">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
           <SpinnerModel initial="0" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="soLuongSpinnerStateChanged"/>
+        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="quantitySpinnerStateChanged"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="tenHHLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Ten Hang Hoa"/>
+        <Property name="text" type="java.lang.String" value="Goods Name"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="tongTienLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Tong Tien"/>
+        <Property name="text" type="java.lang.String" value="Total Price"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="showTotalCostsLabel">
@@ -379,12 +377,46 @@
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="6" rowCount="0">
                 <Column editable="true" title="No." type="java.lang.Object"/>
-                <Column editable="true" title="Ma HH" type="java.lang.Object"/>
-                <Column editable="true" title="Ten HH" type="java.lang.Object"/>
+                <Column editable="true" title="Goods ID" type="java.lang.Object"/>
+                <Column editable="true" title="Goods name" type="java.lang.Object"/>
                 <Column editable="true" title="Don Gia" type="java.lang.Object"/>
-                <Column editable="true" title="So Luong" type="java.lang.Object"/>
-                <Column editable="true" title="Tong Tien" type="java.lang.Object"/>
+                <Column editable="true" title="Quantity" type="java.lang.Object"/>
+                <Column editable="true" title="Total Costs" type="java.lang.Object"/>
               </Table>
+            </Property>
+            <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+              <TableColumnModel selectionModel="0">
+                <Column maxWidth="-1" minWidth="-1" prefWidth="20" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="-1" minWidth="-1" prefWidth="20" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+              </TableColumnModel>
             </Property>
             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
@@ -444,9 +476,11 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="resetButtonActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JLabel" name="tenHangHoaLabel">
+    <Component class="javax.swing.JLabel" name="goodsNameLabel">
     </Component>
-    <Component class="javax.swing.JLabel" name="showNgayBanLabel">
+    <Component class="javax.swing.JLabel" name="showDateLabel">
+    </Component>
+    <Component class="javax.swing.JLabel" name="showStaffID">
     </Component>
   </SubComponents>
 </Form>
