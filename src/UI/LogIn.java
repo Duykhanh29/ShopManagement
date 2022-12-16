@@ -5,7 +5,7 @@
 package UI;
 
 import Lists.*;
-import dinhnghia.NhanVien;
+import model.Staff;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,11 +20,11 @@ import jdbc.TaiKhoanJDBC;
 public class LogIn extends javax.swing.JFrame {
 
     DanhSachNhanVien danhSachNhanVien;
-    NhanVien nv;
-    ArrayList<NhanVien> listStaff = new ArrayList<>();
+    Staff nv;
+    ArrayList<Staff> listStaff = new ArrayList<>();
     NhanVienJDBC nhanVienJDBC;
     TaiKhoanJDBC taiKhoanJDBC;
-    ArrayList<NhanVien> listNVBH = new ArrayList<>();
+    ArrayList<Staff> listNVBH = new ArrayList<>();
     
 
     /**
@@ -38,13 +38,13 @@ public class LogIn extends javax.swing.JFrame {
         listStaff = nhanVienJDBC.getDataNhanVien();
         danhSachNhanVien.setList(listStaff);
         //   danhSachNhanVien.insertNhanVien();
-        nv = new NhanVien();
+        nv = new Staff();
         showComboBox();
         this.setLocationRelativeTo(null);
     }
 
     private void showComboBox() {
-        ArrayList<String> list = nv.getdSachChucVu();;
+        ArrayList<String> list = nv.getListRole();;
         for (String string : list) {
             roleComboBox.addItem(string);
         }
@@ -92,15 +92,16 @@ public class LogIn extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(408, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(roleComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(userNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(125, 125, 125))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(logInButton, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(roleComboBox, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(logInButton, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(210, 210, 210))))
         );
         layout.setVerticalGroup(
@@ -126,19 +127,19 @@ public class LogIn extends javax.swing.JFrame {
 
     private void logInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInButtonActionPerformed
 
-        if (String.valueOf(roleComboBox.getSelectedItem()).equals("Nhan vien ban hang")) {
-            listNVBH = danhSachNhanVien.danhSachNhanVienBanHang();
+        if (String.valueOf(roleComboBox.getSelectedItem()).equals("Shop assistant")) {
+            listNVBH = danhSachNhanVien.listShopAssistant();
             boolean value = false;
             for (int i = 0; i < listNVBH.size(); i++) {
                 String userName = String.valueOf(userNameTextField.getText());
                 String password = String.valueOf(passwordField.getPassword());
-                if (userName.equals(listNVBH.get(i).getMaNV())) {
+                if (userName.equals(listNVBH.get(i).getStaffID())) {
                     try {
-                        NhanVien nv = danhSachNhanVien.getNhanVienVoiID(userName);
-                        System.out.println("Password: "+nv.getMatKhau());
-                        if (password.equals(nv.getMatKhau())) {
-                           StaffUI satffUI = new StaffUI(userName);
-                           satffUI.setVisible(true);
+                        Staff nv = danhSachNhanVien.getStaffWithID(userName);
+                        System.out.println("Password: "+nv.getPassword());
+                        if (password.equals(nv.getPassword())) {
+                           StaffUI staffUI = new StaffUI(userName);
+                           staffUI.setVisible(true);
                            value = true;
                            this.dispose();
                         } else {
@@ -155,15 +156,15 @@ public class LogIn extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Khong dung userName");
             }
 
-        } else if (String.valueOf(roleComboBox.getSelectedItem()).equals("Nhan vien kho")) {
-            listNVBH = danhSachNhanVien.danhSachNhanVienKho();
+        } else if (String.valueOf(roleComboBox.getSelectedItem()).equals("Warehouse staff")) {
+            listNVBH = danhSachNhanVien.listWarehouseStaff();
             boolean value = false;
             for (int i = 0; i < listNVBH.size(); i++) {
                 String userName = String.valueOf(userNameTextField.getText());
                 String password = String.valueOf(passwordField.getPassword());
-                if (userName.equals(listNVBH.get(i).getMaNV())) {
-                    NhanVien nv = danhSachNhanVien.getNhanVienVoiID(userName);
-                    if (password.equals(nv.getMatKhau())) {
+                if (userName.equals(listNVBH.get(i).getStaffID())) {
+                    Staff nv = danhSachNhanVien.getStaffWithID(userName);
+                    if (password.equals(nv.getPassword())) {
                         try {
                             StaffUI satffUI = new StaffUI(userName);
                             satffUI.setVisible(true);
@@ -183,16 +184,16 @@ public class LogIn extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Ko dung userName");
             }
 
-        } else if (String.valueOf(roleComboBox.getSelectedItem()).equals("Quan ly")) {
-            listNVBH = danhSachNhanVien.danhSachQuanLy();
+        } else if (String.valueOf(roleComboBox.getSelectedItem()).equals("Manager")) {
+            listNVBH = danhSachNhanVien.listManager();
             boolean value = false;
             String userName = String.valueOf(userNameTextField.getText());
             for (int i = 0; i < listNVBH.size(); i++) {
-                if (userName.equals(listNVBH.get(i).getMaNV())) {
+                if (userName.equals(listNVBH.get(i).getStaffID())) {
                     try {
                         String password = String.valueOf(passwordField.getPassword());
-                        NhanVien nv = danhSachNhanVien.getNhanVienVoiID(userName);
-                        if (password.equals(nv.getMatKhau())) {
+                        Staff nv = danhSachNhanVien.getStaffWithID(userName);
+                        if (password.equals(nv.getPassword())) {
                             ManagerUI managerUI = new ManagerUI(userName);
                             managerUI.setVisible(true);
                             value = true;

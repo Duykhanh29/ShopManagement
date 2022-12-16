@@ -9,9 +9,9 @@ import Lists.DanhSachHangHoa;
 import Lists.DanhSachHoaDon;
 import Lists.DanhSachNhanVien;
 import check.CheckDate;
-import dinhnghia.HangHoa;
-import dinhnghia.HoaDon;
-import dinhnghia.NhanVien;
+import model.Goods;
+import model.Bill;
+import model.Staff;
 import java.util.ArrayList;
 import jdbc.HoaDonJDBC;
 
@@ -24,6 +24,7 @@ public class QuanLyCuaHang {
     /**
      * @param args the command line arguments
      */
+     
     public static void main(String[] args) {
         // TODO code application logic here
 
@@ -106,6 +107,9 @@ String x=fileIO.readData(fileName);
         System.out.println(x);
         System.out.println(x);
     }
+//    String x= "29-2-2016";
+//    CheckDate check=new CheckDate();
+//    if(check)
     
 
 }

@@ -4,15 +4,16 @@
  */
 package UI;
 
+import model.Goods;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import File.*;
 import Lists.DanhSachHangHoa;
 import java.util.ArrayList;
 import jdbc.*;
-import dinhnghia.*;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import File.*;
 /**
  *
  * @author Admin
@@ -22,91 +23,99 @@ public class NhanVienKhoUI extends javax.swing.JFrame {
     /**
      * Creates new form NhanVienKhoUI
      */
+    GoodsFileIO goodsFileIO;
     DanhSachHangHoa danhSachHangHoa;
     HangHoaJDBC hangHoaJDBC;
-    ArrayList<HangHoa> listHangHoa=new ArrayList<>();
-    FileIO fileIO=new FileIO();
+    ArrayList<Goods> listHangHoa = new ArrayList<>();
+    FileIO fileIO = new FileIO();
     String maNV;
     DefaultTableModel defaultTableModel;
-    int click=-1;
+    int click = -1;
+
     public NhanVienKhoUI(String dataController) throws Exception {
-        danhSachHangHoa=new DanhSachHangHoa();
+        goodsFileIO=new GoodsFileIO();
+        danhSachHangHoa = new DanhSachHangHoa();
         danhSachHangHoa.setList(listHangHoa);
-        hangHoaJDBC=new HangHoaJDBC();
-        listHangHoa=hangHoaJDBC.getDataHangHoa();
+        hangHoaJDBC = new HangHoaJDBC();
+        listHangHoa = hangHoaJDBC.getDataHangHoa();
         danhSachHangHoa.setList(listHangHoa);
+        goodsFileIO.writeDataFromFile(goodsFileIO.fileGoods, listHangHoa);
         initComponents();
-        maNV=dataController;
-        defaultTableModel=(DefaultTableModel)goodsTable.getModel();
+        maNV = dataController;
+        defaultTableModel = (DefaultTableModel) goodsTable.getModel();
         this.setLocationRelativeTo(null);
         display();
     }
 
     private NhanVienKhoUI() {
     }
-    public void display(){
+
+    public void display() {
         for (int i = 0; i < listHangHoa.size(); i++) {
-            showTable((i+1),listHangHoa.get(i));
+            showTable((i + 1), listHangHoa.get(i));
         }
     }
-    public void showTable(int index,HangHoa h){
+
+    public void showTable(int index, Goods h) {
         defaultTableModel.addRow(new Object[]{
-            index,h.getMaHH(),h.getTenHangHoa(),h.getNhaCungCap(),h.getSoLuong(),h.getGiaNhap(),h.getGiaBan()
+            index, h.getGoodsID(), h.getGoodsName(), h.getProducer(), h.getQuantity(), h.getImportedCost(), h.getSellingCost()
         });
     }
-   public boolean emptyCheck(){
-       if(idTextField.getText().equals("")){
-           JOptionPane.showMessageDialog(rootPane, "Input id");
-           idTextField.requestFocus();
-           return true;
-       }
-       if(nameTextField.getText().equals("")){
-           JOptionPane.showMessageDialog(rootPane, "Input name");
-           nameTextField.requestFocus();
-           return true;
-       }
-       if(producerTextField.getText().equals("")){
-           JOptionPane.showMessageDialog(rootPane, "Input producer");
-           producerTextField.requestFocus();
-           return true;
-       }
-       if(Integer.parseInt(quantitySpinner.getValue().toString())==0){
-           JOptionPane.showMessageDialog(rootPane, "Input quantity");
-           quantitySpinner.requestFocus();
-           return true;
-       }
-       if(Integer.parseInt(importedCostTextField.getText())==0||importedCostTextField.getText().equals("")){
-           JOptionPane.showMessageDialog(rootPane, "Input imported Cost");
-           importedCostTextField.requestFocus();
-           return true;
-       }
-       if(Integer.parseInt(sellingCostTextField.getText())==0||sellingCostTextField.getText().equals("")){
-           JOptionPane.showMessageDialog(rootPane, "Input selling Cost");
-           sellingCostTextField.requestFocus();
-           return true;
-       }
-       return false;
-   }
-   
 
-   public void showFormGoods(HangHoa h){
-       idTextField.setText(h.getMaHH());
-       nameTextField.setText(h.getTenHangHoa());
-       producerTextField.setText(h.getNhaCungCap());
-       quantitySpinner.setValue(h.getSoLuong());
-       sellingCostTextField.setText(h.getGiaBan()+"");
-       importedCostTextField.setText(h.getGiaNhap()+"");
-   }
-   public HangHoa getGoodsFromForm(){
-       HangHoa h=new HangHoa();
-       h.setGiaBan(Integer.parseInt(sellingCostTextField.getText()));
-       h.setGiaNhap(Integer.parseInt(importedCostTextField.getText()));
-       h.setSoLuong(Integer.parseInt(quantitySpinner.getValue().toString()));
-       h.setMaHH(idTextField.getText());
-       h.setTenHangHoa(nameTextField.getText());
-       h.setNhaCungCap(producerTextField.getText());
-       return h;
-   }
+    public boolean emptyCheck() {
+        if (idTextField.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Input id");
+            idTextField.requestFocus();
+            return true;
+        }
+        if (nameTextField.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Input name");
+            nameTextField.requestFocus();
+            return true;
+        }
+        if (producerTextField.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Input producer");
+            producerTextField.requestFocus();
+            return true;
+        }
+        if (Integer.parseInt(quantitySpinner.getValue().toString()) == 0) {
+            JOptionPane.showMessageDialog(rootPane, "Input quantity");
+            quantitySpinner.requestFocus();
+            return true;
+        }
+        if (Integer.parseInt(importedCostTextField.getText()) == 0 || importedCostTextField.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Input imported Cost");
+            importedCostTextField.requestFocus();
+            return true;
+        }
+        if (Integer.parseInt(sellingCostTextField.getText()) == 0 || sellingCostTextField.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Input selling Cost");
+            sellingCostTextField.requestFocus();
+            return true;
+        }
+        return false;
+    }
+
+    public void showFormGoods(Goods h) {
+        idTextField.setText(h.getGoodsID());
+        nameTextField.setText(h.getGoodsName());
+        producerTextField.setText(h.getProducer());
+        quantitySpinner.setValue(h.getQuantity());
+        sellingCostTextField.setText(h.getSellingCost()+ "");
+        importedCostTextField.setText(h.getImportedCost()+"");
+    }
+
+    public Goods getGoodsFromForm() {
+        Goods h = new Goods();
+        h.setSellingCost(Integer.parseInt(sellingCostTextField.getText()));
+        h.setImportedCost(Integer.parseInt(importedCostTextField.getText()));
+        h.setQuantity(Integer.parseInt(quantitySpinner.getValue().toString()));
+        h.setGoodsID(idTextField.getText());
+        h.setGoodsName(nameTextField.getText());
+        h.setProducer(producerTextField.getText());
+        return h;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -140,13 +149,19 @@ public class NhanVienKhoUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel32.setText("Ma HH");
+        jLabel32.setText("ID");
 
-        jLabel33.setText("Ten HH");
+        idTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                idTextFieldActionPerformed(evt);
+            }
+        });
 
-        jLabel34.setText("Nha Cung Cap");
+        jLabel33.setText("Name");
 
-        jLabel35.setText("Gia Nhap");
+        jLabel34.setText("Producer");
+
+        jLabel35.setText("Imported Cost");
 
         producerTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -154,11 +169,11 @@ public class NhanVienKhoUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel36.setText("So Luong");
+        jLabel36.setText("Quantity");
 
         quantitySpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
 
-        jLabel37.setText("Gia Ban");
+        jLabel37.setText("Selling Cost");
 
         deleteButton.setText("Delete");
         deleteButton.addActionListener(new java.awt.event.ActionListener() {
@@ -186,7 +201,7 @@ public class NhanVienKhoUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "STT", "Ma HH", "Ten HH", "Nha Cung Cap", "Gia Nhap", "Gia Ban", "So Luong"
+                "No.", "Id", "Name", "Producer", "Quantity", "Imported Cost", "Seling Cost"
             }
         ));
         goodsTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -195,6 +210,10 @@ public class NhanVienKhoUI extends javax.swing.JFrame {
             }
         });
         jScrollPane8.setViewportView(goodsTable);
+        if (goodsTable.getColumnModel().getColumnCount() > 0) {
+            goodsTable.getColumnModel().getColumn(0).setPreferredWidth(15);
+            goodsTable.getColumnModel().getColumn(4).setPreferredWidth(20);
+        }
 
         jButton19.setText("Back");
         jButton19.addActionListener(new java.awt.event.ActionListener() {
@@ -328,20 +347,27 @@ public class NhanVienKhoUI extends javax.swing.JFrame {
 
     private void insertButtonjButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertButtonjButton1ActionPerformed
         // TODO add your handling code here:
-        if(emptyCheck()==false){
+        if (emptyCheck() == false) {
             try {
-                String id=idTextField.getText();
-                String producer=producerTextField.getText();
-                String name=nameTextField.getText();
-                int quantity=Integer.parseInt(quantitySpinner.getValue().toString());
-                int importedCost=Integer.parseInt(importedCostTextField.getText());
-                int sellingCost=Integer.parseInt(sellingCostTextField.getText());
-                HangHoa h=new HangHoa(id, name, name, quantity, importedCost, sellingCost);
-                hangHoaJDBC.insertIntoDatabase(h);
-                listHangHoa.add(h);
-                defaultTableModel.setRowCount(0);
-                danhSachHangHoa.setList(listHangHoa);
-                display();
+                String id = idTextField.getText();
+                if (danhSachHangHoa.checkExist(id) == false) {
+                    String producer = producerTextField.getText();
+                    String name = nameTextField.getText();
+                    int quantity = Integer.parseInt(quantitySpinner.getValue().toString());
+                    int importedCost = Integer.parseInt(importedCostTextField.getText());
+                    int sellingCost = Integer.parseInt(sellingCostTextField.getText());
+                    Goods h = new Goods(id, name, name, quantity, importedCost, sellingCost);
+                    hangHoaJDBC.insertIntoDatabase(h);
+                    listHangHoa=hangHoaJDBC.getDataHangHoa();
+                    goodsFileIO.writeDataFromFile(goodsFileIO.fileGoods, listHangHoa);
+                    defaultTableModel.setRowCount(0);
+                    danhSachHangHoa.setList(listHangHoa);
+                    display();
+                } else {
+                    
+                    JOptionPane.showMessageDialog(rootPane, "Please input other id");
+                }
+
             } catch (Exception ex) {
                 Logger.getLogger(NhanVienKhoUI.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -351,7 +377,7 @@ public class NhanVienKhoUI extends javax.swing.JFrame {
     private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
         try {
             // TODO add your handling code here:
-            StaffUI staffUI=new StaffUI(maNV);
+            StaffUI staffUI = new StaffUI(maNV);
             staffUI.setVisible(true);
             this.dispose();
         } catch (Exception ex) {
@@ -361,13 +387,14 @@ public class NhanVienKhoUI extends javax.swing.JFrame {
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
         // TODO add your handling code here:
-        if(emptyCheck()==false){
-            if(click!=-1){
+        if (emptyCheck() == false) {
+            if (click != -1) {
                 try {
-                    HangHoa oldH=danhSachHangHoa.getHangHoaAtIndex(click);
-                    HangHoa newHH=getGoodsFromForm();
+                    Goods oldH = danhSachHangHoa.getGoodsAtIndex(click);
+                    Goods newHH = getGoodsFromForm();
                     hangHoaJDBC.edit(oldH, newHH);
-                    listHangHoa=hangHoaJDBC.getDataHangHoa();
+                    listHangHoa = hangHoaJDBC.getDataHangHoa();
+                    goodsFileIO.writeDataFromFile(goodsFileIO.fileGoods, listHangHoa);
                     danhSachHangHoa.setList(listHangHoa);
                     defaultTableModel.setRowCount(0);
                     display();
@@ -375,17 +402,17 @@ public class NhanVienKhoUI extends javax.swing.JFrame {
                     Logger.getLogger(NhanVienKhoUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            
+
         }
     }//GEN-LAST:event_editButtonActionPerformed
 
     private void goodsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_goodsTableMouseClicked
         // TODO add your handling code here:
-         if (listHangHoa.size()!= 0) {
+        if (listHangHoa.size() != 0) {
             int point = goodsTable.getSelectedRow();
             click = point;
             if (click != -1) {
-                HangHoa h = danhSachHangHoa.getHangHoaAtIndex(click);
+                Goods h = danhSachHangHoa.getGoodsAtIndex(click);
                 showFormGoods(h);
             }
         }
@@ -406,44 +433,49 @@ public class NhanVienKhoUI extends javax.swing.JFrame {
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         // TODO add your handling code here:
-        if(listHangHoa.size()!=0){
-            if(click!=-1){
+        if (listHangHoa.size() != 0) {
+            if (click != -1) {
                 try {
-                    HangHoa h=danhSachHangHoa.getHangHoaAtIndex(click);
+                    Goods h = danhSachHangHoa.getGoodsAtIndex(click);
                     hangHoaJDBC.delete(h);
-                    listHangHoa=hangHoaJDBC.getDataHangHoa();
+                    listHangHoa = hangHoaJDBC.getDataHangHoa();
                     danhSachHangHoa.setList(listHangHoa);
+                    goodsFileIO.writeDataFromFile(goodsFileIO.fileGoods, listHangHoa);
                     defaultTableModel.setRowCount(0);
                     display();
                 } catch (Exception ex) {
                     Logger.getLogger(NhanVienKhoUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        }else{
+        } else {
             JOptionPane.showMessageDialog(rootPane, "No data");
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         // TODO add your handling code here:
-        if(listHangHoa.size()!=0){
-           String id=searchTextField.getText();
-           if(id.equals("")){
-               JOptionPane.showMessageDialog(rootPane, "Please input id");
-           }else{
-               HangHoa h=danhSachHangHoa.getHangHoaWithID(id);
-               if(h!=null){
-                   showFormGoods(h);
-                   defaultTableModel.setRowCount(0);
-                   showTable(1, h);
-               }else{
-                   JOptionPane.showMessageDialog(rootPane, "Not found");
-               }
-           }
-        }else{
+        if (listHangHoa.size() != 0) {
+            String id = searchTextField.getText();
+            if (id.equals("")) {
+                JOptionPane.showMessageDialog(rootPane, "Please input id");
+            } else {
+                Goods h = danhSachHangHoa.getGoodsWithID(id);
+                if (h != null) {
+                    showFormGoods(h);
+                    defaultTableModel.setRowCount(0);
+                    showTable(1, h);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Not found");
+                }
+            }
+        } else {
             JOptionPane.showMessageDialog(rootPane, "No data");
         }
     }//GEN-LAST:event_searchButtonActionPerformed
+
+    private void idTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_idTextFieldActionPerformed
 
     /**
      * @param args the command line arguments

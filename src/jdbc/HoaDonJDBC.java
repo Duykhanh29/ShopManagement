@@ -4,7 +4,7 @@
  */
 package jdbc;
 
-import dinhnghia.HoaDon;
+import model.Bill;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,9 +17,9 @@ import java.util.ArrayList;
  */
 public class HoaDonJDBC {
      ConnectToDatabase connectToDatabase=new ConnectToDatabase();
-    public ArrayList<HoaDon> getDataHoaDon() throws Exception
+    public ArrayList<Bill> getDataHoaDon() throws Exception
     {
-        ArrayList<HoaDon> list=new ArrayList<>();
+        ArrayList<Bill> list=new ArrayList<>();
         String sql="select * from HoaDon";
         Connection connection=connectToDatabase.getConnection();
         Statement statement=connection.createStatement();
@@ -32,24 +32,25 @@ public class HoaDonJDBC {
             String thoiGian=resultSet.getString("thoiGian");
             int soLuong=resultSet.getInt("tongSoLuong");
             int tongTien=resultSet.getInt("tongTien");
-            list.add(new HoaDon(maHD, maNV, thoiGian, soLuong, tongTien));
+            list.add(new Bill(maHD, maNV, thoiGian, soLuong, tongTien));
         }
         resultSet.close();
         connection.close();
         return list;
     }
-    public void insertIntoDatabase(HoaDon h)throws Exception
+    
+    public void insertIntoDatabase(Bill h)throws Exception
     { 
         Connection connection=connectToDatabase.getConnection();
         String sql="insert into HoaDon values(?,?,?,?,?)";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
-        preparedStatement.setString(1,h.getMaHD());
+        preparedStatement.setString(1,h.getBillID());
        //preparedStatement.setString(2, h.getMaHangHoa());
         //preparedStatement.setString(3, h.getTenHangHoa());
-        preparedStatement.setString(2, h.getMaNV());
-        preparedStatement.setString(3, h.getThoiGian());
-        preparedStatement.setInt(4, h.getSoLuong());
-        preparedStatement.setInt(5, h.getTongTien());
+        preparedStatement.setString(2, h.getStaffID());
+        preparedStatement.setString(3, h.getTime());
+        preparedStatement.setInt(4, h.getQuantity());
+        preparedStatement.setInt(5, h.getTotalCosts());
         int row=preparedStatement.executeUpdate();
         if(row!=0)
         {
@@ -59,11 +60,11 @@ public class HoaDonJDBC {
         }
         connection.close();
     }
-    public void delete(HoaDon h) throws Exception{
+    public void delete(Bill h) throws Exception{
         Connection connection=connectToDatabase.getConnection();
         String sql="delete from HoaDon where maHD=?";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
-        preparedStatement.setString(1, h.getMaHD());
+        preparedStatement.setString(1, h.getBillID());
         int row=preparedStatement.executeUpdate();
         if(row!=0)
         {
@@ -73,18 +74,16 @@ public class HoaDonJDBC {
         }
         connection.close();
     }
-    public void edit(HoaDon h,HoaDon x) throws Exception{
+    public void edit(Bill h,Bill x) throws Exception{
         Connection connection=connectToDatabase.getConnection();
         String sql="update HoaDon set maHD=? , maNV=? , thoiGian=? ,tongSoLuong=?, tongTien=? where maHD=?";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
-        preparedStatement.setString(1, x.getMaHD());
-//        preparedStatement.setString(2, x.getMaHangHoa());
-//        preparedStatement.setString(3, x.getTenHangHoa());
-        preparedStatement.setString(2, x.getMaNV());
-        preparedStatement.setString(3, x.getThoiGian());
-        preparedStatement.setInt(4, x.getSoLuong());
-        preparedStatement.setInt(5, x.getTongTien());
-        preparedStatement.setString(6, h.getMaHD());
+        preparedStatement.setString(1, x.getBillID());
+        preparedStatement.setString(2, x.getStaffID());
+        preparedStatement.setString(3, x.getTime());
+        preparedStatement.setInt(4, x.getQuantity());
+        preparedStatement.setInt(5, x.getTotalCosts());
+        preparedStatement.setString(6, h.getBillID());
         int row=preparedStatement.executeUpdate();
         if(row!=0)
         {
@@ -94,7 +93,7 @@ public class HoaDonJDBC {
         }
         connection.close();
     }
-    public void edit(String ma,HoaDon x) throws Exception{
+    public void edit(String ma,Bill x) throws Exception{
         Connection connection=connectToDatabase.getConnection();
         String sql="update HoaDon set tongSoLuong=?, tongTien=? where maHD=?";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
@@ -103,8 +102,8 @@ public class HoaDonJDBC {
 //        preparedStatement.setString(3, x.getTenHangHoa());
   //      preparedStatement.setString(4, x.getMaNV());
     //    preparedStatement.setString(5, x.getThoiGian());
-        preparedStatement.setInt(1, x.getSoLuong());
-        preparedStatement.setInt(2, x.getTongTien());
+        preparedStatement.setInt(1, x.getQuantity());
+        preparedStatement.setInt(2, x.getTotalCosts());
         preparedStatement.setString(3, ma);
         int row=preparedStatement.executeUpdate();
         if(row!=0)
@@ -130,5 +129,25 @@ public class HoaDonJDBC {
         }
         connection.close();
     }
+    public int query(String year,String month,String day)throws Exception{
+         Connection connection=connectToDatabase.getConnection();
+         int result=0;
+        String sql="select sum(tongTien) N'Costs' from HoaDon where year(thoiGian) = ? and month(thoiGian) = ? and day(thoiGian) =?";
+       PreparedStatement preparedStatement=connection.prepareStatement(sql);
+        preparedStatement.setString(1, year);
+        preparedStatement.setString(2, month);
+        preparedStatement.setString(3, day);
+        int row=preparedStatement.executeUpdate();
+        if(row!=0)
+        {
+            System.out.println("\tDelete successfully with: "+row);
+        }else{
+            System.out.println("\tDelete unsuccessfully");
+        }
+        
+        connection.close();
+        return result;
+    }
+    
   
 }

@@ -4,8 +4,8 @@
  */
 package jdbc;
 
-import dinhnghia.ChiTietHoaDon;
-import dinhnghia.HangHoa;
+import model.BillDetails;
+import model.Goods;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -15,9 +15,9 @@ import java.util.ArrayList;
  */
 public class ChiTietHoaDonJDBC {
     ConnectToDatabase connectToDatabase=new ConnectToDatabase();
-     public ArrayList<ChiTietHoaDon> getDataChiTietHoaDon() throws Exception
+     public ArrayList<BillDetails> getDataChiTietHoaDon() throws Exception
     {
-        ArrayList<ChiTietHoaDon> list=new ArrayList<>();
+        ArrayList<BillDetails> list=new ArrayList<>();
         String sql="select * from ChiTietHoaDon";
         Connection connection=connectToDatabase.getConnection();
         Statement statement=connection.createStatement();
@@ -29,23 +29,23 @@ public class ChiTietHoaDonJDBC {
             int soLuongHH=resultSet.getInt("soLuongHH");
             int giaBan=resultSet.getInt("giaBan");
             int tongSoTien=resultSet.getInt("tongSoTien");
-            list.add(new ChiTietHoaDon(maHH, maHH, tenHangHoa, soLuongHH, giaBan, tongSoTien));
+            list.add(new BillDetails(maHH, maHH, tenHangHoa, soLuongHH, giaBan, tongSoTien));
         }
         resultSet.close();
         connection.close();
         return list;
     }
-    public void insertIntoDatabase(ChiTietHoaDon c)throws Exception
+    public void insertIntoDatabase(BillDetails c)throws Exception
     { 
         Connection connection=connectToDatabase.getConnection();
         String sql="insert into ChiTietHoaDon values(?,?,?,?,?,?)";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
-        preparedStatement.setString(1, c.getMaHD());
-        preparedStatement.setString(2, c.getMaHH());
-        preparedStatement.setString(3, c.getTenHangHoa());
-        preparedStatement.setInt(4, c.getSoLuong());
-        preparedStatement.setInt(5, c.getGiaBan());
-        preparedStatement.setInt(6, c.getTongTien());
+        preparedStatement.setString(1, c.getBillID());
+        preparedStatement.setString(2, c.getGoodsID());
+        preparedStatement.setString(3, c.getGoodsName());
+        preparedStatement.setInt(4, c.getQuantity());
+        preparedStatement.setInt(5, c.getSellingCost());
+        preparedStatement.setInt(6, c.getTotalCosts());
         int row=preparedStatement.executeUpdate();
         if(row!=0)
         {
@@ -55,11 +55,11 @@ public class ChiTietHoaDonJDBC {
         }
         connection.close();
     }
-    public void delete(ChiTietHoaDon c) throws Exception{
+    public void delete(BillDetails c) throws Exception{
         Connection connection=connectToDatabase.getConnection();
         String sql="delete from ChiTietHoaDon where maHD=?";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
-        preparedStatement.setString(1, c.getMaHD());
+        preparedStatement.setString(1, c.getBillID());
         int row=preparedStatement.executeUpdate();
         if(row!=0)
         {
@@ -69,17 +69,17 @@ public class ChiTietHoaDonJDBC {
         }
         connection.close();
     }
-    public void edit(ChiTietHoaDon oldH,ChiTietHoaDon newH) throws Exception{
+    public void edit(BillDetails oldH,BillDetails newH) throws Exception{
         Connection connection=connectToDatabase.getConnection();
         String sql="update ChiTietHoaDon set maHD=? , maHH= ?, tenHangHoa=? , soLuongHH=? , giaBan=? ,tongSoTien=? where maHD=?";
         PreparedStatement preparedStatement=connection.prepareStatement(sql);
-        preparedStatement.setString(1, newH.getMaHD());
-        preparedStatement.setString(2, newH.getMaHH());
-        preparedStatement.setString(3, newH.getTenHangHoa());
-        preparedStatement.setInt(4, newH.getSoLuong());
-        preparedStatement.setInt(5, newH.getGiaBan());
-        preparedStatement.setDouble(6, newH.getTongTien());
-        preparedStatement.setString(7, oldH.getMaHD());
+        preparedStatement.setString(1, newH.getBillID());
+        preparedStatement.setString(2, newH.getGoodsID());
+        preparedStatement.setString(3, newH.getGoodsName());
+        preparedStatement.setInt(4, newH.getQuantity());
+        preparedStatement.setInt(5, newH.getSellingCost());
+        preparedStatement.setDouble(6, newH.getTotalCosts());
+        preparedStatement.setString(7, oldH.getBillID());
         int row=preparedStatement.executeUpdate();
         if(row!=0)
         {

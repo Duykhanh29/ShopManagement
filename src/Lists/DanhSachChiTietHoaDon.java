@@ -4,7 +4,7 @@
  */
 package Lists;
 
-import dinhnghia.ChiTietHoaDon;
+import model.BillDetails;
 import java.util.ArrayList;
 
 /**
@@ -13,58 +13,48 @@ import java.util.ArrayList;
  */
 public class DanhSachChiTietHoaDon {
 
-    public void setList(ArrayList<ChiTietHoaDon> list) {
+    public void setList(ArrayList<BillDetails> list) {
         this.list = list;
     }
     
-    ArrayList<ChiTietHoaDon> list=new ArrayList<>();
+    ArrayList<BillDetails> list=new ArrayList<>();
     public int getSize(){
         return list.size();
     }
-    public void add(ChiTietHoaDon c){
+    public void add(BillDetails c){
         list.add(c);
     }
-    public String getTenHHFromMaHH(String id){
-        for (ChiTietHoaDon chiTietHoaDon : list) {
-            if(chiTietHoaDon.getMaHH().equals(id)){
-                return chiTietHoaDon.getTenHangHoa();
+    public String getGoodsNameFromMaHH(String id){
+        for (BillDetails billDetails : list) {
+            if(billDetails.getGoodsID().equals(id)){
+                return billDetails.getGoodsName();
             }
         }
         return null;
     }
-    public int getDonGiaFromID(String id){
-        for (ChiTietHoaDon chiTietHoaDon : list) {
-            if(chiTietHoaDon.getMaHH().equals(id)){
-                return chiTietHoaDon.getGiaBan();
+    public int getSellingCostFromID(String id){
+        for (BillDetails chiTietHoaDon : list) {
+            if(chiTietHoaDon.getGoodsID().equals(id)){
+                return chiTietHoaDon.getSellingCost();
             }
         }
         return -1;
     }
-    public void insert(){
-        list.add(new ChiTietHoaDon("HD01", "HH01", "Ten", 4, 2, 51));
-        list.add(new ChiTietHoaDon("HD02", "HH01", "fdas", 4, 62, 15));
-        list.add(new ChiTietHoaDon("HD03", "HH05", "Ten", 4, 23, 54));
-        list.add(new ChiTietHoaDon("HD04", "HH06", "fda", 4, 62, 5));
-        list.add(new ChiTietHoaDon("HD05", "HH07", "gfds", 4, 2, 25));
-        list.add(new ChiTietHoaDon("HD07", "HH08", "fd", 4, 2, 5));
-        list.add(new ChiTietHoaDon("HD08", "HH09", "Ten", 54, 27, 52));
-        list.add(new ChiTietHoaDon("HD09", "HH01", "gs", 4, 2, 5));
-        list.add(new ChiTietHoaDon("HD10", "HH01", "gfs", 64, 2, 52));
-    }
-    public ArrayList<ChiTietHoaDon> getList(){
+   
+    public ArrayList<BillDetails> getList(){
         return list;
     }
     
     // temporary method
     public ArrayList<String> getListID(){
          ArrayList<String> newList=new ArrayList<>();
-         for (ChiTietHoaDon chiTietHoaDon : list) {
-            newList.add(chiTietHoaDon.getMaHH());
+         for (BillDetails chiTietHoaDon : list) {
+            newList.add(chiTietHoaDon.getGoodsID());
         }
          return newList;
     }
     
-    public ChiTietHoaDon getChiTietHoaDonAtIndex(int index){
+    public BillDetails getBillDetailsAtIndex(int index){
         return list.get(index);
     }
     
@@ -74,7 +64,7 @@ public class DanhSachChiTietHoaDon {
         int num=0;
         for (int i = 0; i < list.size(); i++) {
            // if(list.get(i).getMaHD().equals(maHD)){
-                num=num+list.get(i).getSoLuong();
+                num=num+list.get(i).getQuantity();
            // }
         }
         return num;
@@ -83,7 +73,7 @@ public class DanhSachChiTietHoaDon {
         int num=0;
         for (int i = 0; i < list.size(); i++) {
       //      if(list.get(i).getMaHD().equals(maHD)){
-                num=num+list.get(i).getTongTien();
+                num=num+list.get(i).getTotalCosts();
        //     }
         }
         return num;
@@ -99,8 +89,8 @@ public class DanhSachChiTietHoaDon {
     public int getTotalQuantityOfEachBill(String maHD){
         int num=0;
         for (int i = 0; i < list.size(); i++) {
-            if(list.get(i).getMaHD().equals(maHD)){
-                num=num+list.get(i).getSoLuong();
+            if(list.get(i).getBillID().equals(maHD)){
+                num=num+list.get(i).getQuantity();
             }
         }
         return num;
@@ -108,30 +98,32 @@ public class DanhSachChiTietHoaDon {
     public int getTotalCostsOfEachBill(String maHD){
         int num=0;
         for (int i = 0; i < list.size(); i++) {
-            if(list.get(i).getMaHD().equals(maHD)){
-                num=num+list.get(i).getTongTien();
+            if(list.get(i).getBillID().equals(maHD)){
+                num=num+list.get(i).getTotalCosts();
             }
         }
         return num;
     }
+    
+    // check if 2 Bill Detail is same 
     public boolean validCheck(String maHD,String maHH){
         for(int i=0;i<list.size();i++){
-            if(list.get(i).getMaHD().equals(maHD)&&list.get(i).getMaHH().equals(maHH)){
+            if(list.get(i).getBillID().equals(maHD)&&list.get(i).getGoodsID().equals(maHH)){
                 return true; 
             }
         }
         return false;
     }
-    public void edit(ChiTietHoaDon oldH,ChiTietHoaDon newH){
+    public void edit(BillDetails oldH,BillDetails newH){
         for(int i=0;i<list.size();i++){
-            if(list.get(i).getMaHD().equals(oldH.getMaHD())&&list.get(i).getMaHH().equals(oldH.getMaHH())){
+            if(list.get(i).getBillID().equals(oldH.getBillID())&&list.get(i).getGoodsID().equals(oldH.getGoodsID())){
                 list.set(i, newH);
             }
         }
     }
-    public void delete(ChiTietHoaDon c){
+    public void delete(BillDetails c){
          for(int i=0;i<list.size();i++){
-            if(list.get(i).getMaHD().equals(c.getMaHD())&&list.get(i).getMaHH().equals(c.getMaHH())){
+            if(list.get(i).getBillID().equals(c.getBillID())&&list.get(i).getGoodsID().equals(c.getGoodsID())){
                 list.remove(i);
             }
         }

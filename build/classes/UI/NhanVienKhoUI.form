@@ -151,26 +151,29 @@
   <SubComponents>
     <Component class="javax.swing.JLabel" name="jLabel32">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Ma HH"/>
+        <Property name="text" type="java.lang.String" value="ID"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="idTextField">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="idTextFieldActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel33">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Ten HH"/>
+        <Property name="text" type="java.lang.String" value="Name"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="nameTextField">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel34">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Nha Cung Cap"/>
+        <Property name="text" type="java.lang.String" value="Producer"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel35">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Gia Nhap"/>
+        <Property name="text" type="java.lang.String" value="Imported Cost"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="producerTextField">
@@ -182,7 +185,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel36">
       <Properties>
-        <Property name="text" type="java.lang.String" value="So Luong"/>
+        <Property name="text" type="java.lang.String" value="Quantity"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JSpinner" name="quantitySpinner">
@@ -194,7 +197,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel37">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Gia Ban"/>
+        <Property name="text" type="java.lang.String" value="Selling Cost"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="sellingCostTextField">
@@ -234,14 +237,53 @@
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="7" rowCount="0">
-                <Column editable="true" title="STT" type="java.lang.Object"/>
-                <Column editable="true" title="Ma HH" type="java.lang.Object"/>
-                <Column editable="true" title="Ten HH" type="java.lang.Object"/>
-                <Column editable="true" title="Nha Cung Cap" type="java.lang.Object"/>
-                <Column editable="true" title="Gia Nhap" type="java.lang.Object"/>
-                <Column editable="true" title="Gia Ban" type="java.lang.Object"/>
-                <Column editable="true" title="So Luong" type="java.lang.Object"/>
+                <Column editable="true" title="No." type="java.lang.Object"/>
+                <Column editable="true" title="Id" type="java.lang.Object"/>
+                <Column editable="true" title="Name" type="java.lang.Object"/>
+                <Column editable="true" title="Producer" type="java.lang.Object"/>
+                <Column editable="true" title="Quantity" type="java.lang.Object"/>
+                <Column editable="true" title="Imported Cost" type="java.lang.Object"/>
+                <Column editable="true" title="Seling Cost" type="java.lang.Object"/>
               </Table>
+            </Property>
+            <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+              <TableColumnModel selectionModel="0">
+                <Column maxWidth="-1" minWidth="-1" prefWidth="15" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="-1" minWidth="-1" prefWidth="20" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+              </TableColumnModel>
             </Property>
             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
