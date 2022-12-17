@@ -1,6 +1,6 @@
-HH02	Motobike	Vision	19	70	80
+HH02	Motobike	Vision	15	70	80
 HH03	Bike	Hyn	0	20	30
-HH04	Computer	Dell	42	100	110
+HH04	Computer	Dell	39	100	110
 HH05	Mouse	Silotech	52	10	14
 HH06	Book	NoteBook	22	20	40
 HH07	Lamp	Light	12	12	40
