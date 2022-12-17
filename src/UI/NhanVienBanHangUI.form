@@ -187,7 +187,7 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="confirmPaymentButton" min="-2" pref="33" max="-2" attributes="0"/>
-              <EmptySpace pref="57" max="32767" attributes="0"/>
+              <EmptySpace pref="59" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="jScrollPane2" pref="0" max="32767" attributes="0"/>
                   <Component id="jScrollPane1" pref="251" max="32767" attributes="0"/>
@@ -379,7 +379,7 @@
                 <Column editable="true" title="No." type="java.lang.Object"/>
                 <Column editable="true" title="Goods ID" type="java.lang.Object"/>
                 <Column editable="true" title="Goods name" type="java.lang.Object"/>
-                <Column editable="true" title="Don Gia" type="java.lang.Object"/>
+                <Column editable="true" title="Seling Costs" type="java.lang.Object"/>
                 <Column editable="true" title="Quantity" type="java.lang.Object"/>
                 <Column editable="true" title="Total Costs" type="java.lang.Object"/>
               </Table>

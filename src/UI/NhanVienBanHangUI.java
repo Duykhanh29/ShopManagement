@@ -308,7 +308,7 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "No.", "Goods ID", "Goods name", "Don Gia", "Quantity", "Total Costs"
+                "No.", "Goods ID", "Goods name", "Seling Costs", "Quantity", "Total Costs"
             }
         ));
         chiTietTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -494,7 +494,7 @@ public class NhanVienBanHangUI extends javax.swing.JFrame {
                             .addComponent(resetButton))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(confirmPaymentButton, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))
