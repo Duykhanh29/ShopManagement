@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import jdbc.NhanVienJDBC;
-import jdbc.TaiKhoanJDBC;
+import jdbc.StaffJDBC;
 
 /**
  *
@@ -19,12 +18,11 @@ import jdbc.TaiKhoanJDBC;
  */
 public class LogIn extends javax.swing.JFrame {
 
-    DanhSachNhanVien danhSachNhanVien;
-    Staff nv;
+    StaffList staffList;
+    Staff staff;
     ArrayList<Staff> listStaff = new ArrayList<>();
-    NhanVienJDBC nhanVienJDBC;
-    TaiKhoanJDBC taiKhoanJDBC;
-    ArrayList<Staff> listNVBH = new ArrayList<>();
+    StaffJDBC staffJDBC;
+    ArrayList<Staff> list = new ArrayList<>();
     
 
     /**
@@ -32,19 +30,18 @@ public class LogIn extends javax.swing.JFrame {
      */
     public LogIn() throws Exception {
         initComponents();
-        danhSachNhanVien = new DanhSachNhanVien();
-        nhanVienJDBC = new NhanVienJDBC();
-        taiKhoanJDBC = new TaiKhoanJDBC();
-        listStaff = nhanVienJDBC.getDataNhanVien();
-        danhSachNhanVien.setList(listStaff);
+        staffList = new StaffList();
+        staffJDBC = new StaffJDBC();
+        listStaff = staffJDBC.getData();
+        staffList.setList(listStaff);
         //   danhSachNhanVien.insertNhanVien();
-        nv = new Staff();
+        staff = new Staff();
         showComboBox();
         this.setLocationRelativeTo(null);
     }
 
     private void showComboBox() {
-        ArrayList<String> list = nv.getListRole();;
+        ArrayList<String> list = staff.getListRole();;
         for (String string : list) {
             roleComboBox.addItem(string);
         }
@@ -62,6 +59,7 @@ public class LogIn extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         userNameTextField = new javax.swing.JTextField();
         passwordField = new javax.swing.JPasswordField();
@@ -82,21 +80,31 @@ public class LogIn extends javax.swing.JFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("SHOP MANAGEMENT");
 
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setIcon(new javax.swing.ImageIcon("D:\\OneDrive CT050426\\OneDrive - actvn.edu.vn\\Ảnh\\10-best-shopping-store-logo.gif")); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(43, Short.MAX_VALUE)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(52, 52, 52))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(100, 100, 100)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(59, 59, 59)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(48, 48, 48)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(70, 70, 70))
         );
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 255));
@@ -203,15 +211,14 @@ public class LogIn extends javax.swing.JFrame {
     private void logInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInButtonActionPerformed
 
         if (String.valueOf(roleComboBox.getSelectedItem()).equals("Shop assistant")) {
-            listNVBH = danhSachNhanVien.listShopAssistant();
+            list = staffList.listShopAssistant();
             boolean value = false;
-            for (int i = 0; i < listNVBH.size(); i++) {
+            for (int i = 0; i < list.size(); i++) {
                 String userName = String.valueOf(userNameTextField.getText());
                 String password = String.valueOf(passwordField.getPassword());
-                if (userName.equals(listNVBH.get(i).getStaffID())) {
+                if (userName.equals(list.get(i).getStaffID())) {
                     try {
-                        Staff nv = danhSachNhanVien.getStaffWithID(userName);
-                        System.out.println("Password: "+nv.getPassword());
+                        Staff nv = staffList.getStaffWithID(userName);
                         if (password.equals(nv.getPassword())) {
                             StaffUI staffUI = new StaffUI(userName);
                             staffUI.setVisible(true);
@@ -219,7 +226,7 @@ public class LogIn extends javax.swing.JFrame {
                             this.dispose();
                         } else {
                             value = true;
-                            JOptionPane.showMessageDialog(rootPane, "Khong dung password");
+                            JOptionPane.showMessageDialog(rootPane, "incorrect password");
                         }
 
                     } catch (Exception ex) {
@@ -228,21 +235,21 @@ public class LogIn extends javax.swing.JFrame {
                 }
             }
             if (value == false) {
-                JOptionPane.showMessageDialog(this, "Khong dung userName");
+                JOptionPane.showMessageDialog(this, "incorrect userName");
             }
 
-        } else if (String.valueOf(roleComboBox.getSelectedItem()).equals("Warehouse staff")) {
-            listNVBH = danhSachNhanVien.listWarehouseStaff();
+        } else if (String.valueOf(roleComboBox.getSelectedItem()).equals("Storage staff")) {
+            list = staffList.listStorageStaff();
             boolean value = false;
-            for (int i = 0; i < listNVBH.size(); i++) {
+            for (int i = 0; i < list.size(); i++) {
                 String userName = String.valueOf(userNameTextField.getText());
                 String password = String.valueOf(passwordField.getPassword());
-                if (userName.equals(listNVBH.get(i).getStaffID())) {
-                    Staff nv = danhSachNhanVien.getStaffWithID(userName);
+                if (userName.equals(list.get(i).getStaffID())) {
+                    Staff nv = staffList.getStaffWithID(userName);
                     if (password.equals(nv.getPassword())) {
                         try {
-                            StaffUI satffUI = new StaffUI(userName);
-                            satffUI.setVisible(true);
+                            StaffUI staffUI = new StaffUI(userName);
+                            staffUI.setVisible(true);
                             value = true;
                             this.dispose();
                         } catch (Exception ex) {
@@ -250,31 +257,31 @@ public class LogIn extends javax.swing.JFrame {
                         }
                     } else {
                         value = true;
-                        JOptionPane.showMessageDialog(rootPane, "Khong dung password");
+                        JOptionPane.showMessageDialog(rootPane, "incorrect password");
                     }
 
                 }
             }
             if (value == false) {
-                JOptionPane.showMessageDialog(this, "Ko dung userName");
+                JOptionPane.showMessageDialog(this, "incorrect userName");
             }
 
         } else if (String.valueOf(roleComboBox.getSelectedItem()).equals("Manager")) {
-            listNVBH = danhSachNhanVien.listManager();
+            list = staffList.listManager();
             boolean value = false;
             String userName = String.valueOf(userNameTextField.getText());
-            for (int i = 0; i < listNVBH.size(); i++) {
-                if (userName.equals(listNVBH.get(i).getStaffID())) {
+            for (int i = 0; i < list.size(); i++) {
+                if (userName.equals(list.get(i).getStaffID())) {
                     try {
                         String password = String.valueOf(passwordField.getPassword());
-                        Staff nv = danhSachNhanVien.getStaffWithID(userName);
+                        Staff nv = staffList.getStaffWithID(userName);
                         if (password.equals(nv.getPassword())) {
-                            ManagerUI managerUI = new ManagerUI(userName);
-                            managerUI.setVisible(true);
+                            StaffUI staffUI=new StaffUI(userName);
+                            staffUI.setVisible(true);
                             value = true;
                             this.dispose();
                         } else {
-                            JOptionPane.showMessageDialog(rootPane, "Khong dung password");
+                            JOptionPane.showMessageDialog(rootPane, "incorrect password");
                             value = true;
                         }
 
@@ -284,7 +291,7 @@ public class LogIn extends javax.swing.JFrame {
                 }
             }
             if (value == false) {
-                JOptionPane.showMessageDialog(this, "Ko dung userName");
+                JOptionPane.showMessageDialog(this, "incorrect userName");
             }
         }
     }//GEN-LAST:event_logInButtonActionPerformed
@@ -333,6 +340,7 @@ public class LogIn extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JButton logInButton;

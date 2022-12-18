@@ -22,22 +22,22 @@ public class ManagerUI extends javax.swing.JFrame {
      * Creates new form ManagerUI
      */
     String maNV;
-    NhanVienJDBC nhanVienJDBC;
-    DanhSachNhanVien danhSachNhanVien;
+    StaffJDBC nhanVienJDBC;
+    StaffList danhSachNhanVien;
     ArrayList<Staff> listStaff = new ArrayList<>();
     Staff thisManager = new Staff();
 
     public ManagerUI(String dataController) throws Exception {
-        nhanVienJDBC = new NhanVienJDBC();
-        danhSachNhanVien = new DanhSachNhanVien();
-        listStaff = nhanVienJDBC.getDataNhanVien();
-        danhSachNhanVien.setList(listStaff);
-        maNV = dataController;
-        thisManager = danhSachNhanVien.getStaffWithID(maNV);
+//        nhanVienJDBC = new StaffJDBC();
+//        danhSachNhanVien = new StaffList();
+//        listStaff = nhanVienJDBC.getData();
+//        danhSachNhanVien.setList(listStaff);
+//        maNV = dataController;
+//        thisManager = danhSachNhanVien.getStaffWithID(maNV);
         initComponents();
-        this.setLocationRelativeTo(null);
-        showTitle.setText("WELCOME BACK "+maNV+"  "+thisManager.getStaffName());
-        //showInforLabel.setText(maNV + " - " + thisManager.getStaffName());
+//        this.setLocationRelativeTo(null);
+//        showTitle.setText("WELCOME BACK "+maNV+"  "+thisManager.getStaffName());
+//        //showInforLabel.setText(maNV + " - " + thisManager.getStaffName());
     }
 
     private ManagerUI() {

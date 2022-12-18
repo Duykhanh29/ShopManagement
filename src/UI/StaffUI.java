@@ -19,21 +19,20 @@ public class StaffUI extends javax.swing.JFrame {
     /**
      * Creates new form StaffUI
      */
-    String maNV;
-    NhanVienJDBC nhanVienJDBC;
-    DanhSachNhanVien danhSachNhanVien;
+    String staffID;
+    StaffJDBC staffJDBC;
+    StaffList staffList;
     ArrayList<Staff> listStaff=new ArrayList<>();
-    Staff thisManager=new Staff();
+    Staff thisStaff=new Staff();
     public StaffUI(String dataController)throws Exception {
-        nhanVienJDBC=new NhanVienJDBC();
-        danhSachNhanVien=new DanhSachNhanVien();
-        listStaff=nhanVienJDBC.getDataNhanVien();
-        danhSachNhanVien.setList(listStaff);
-        maNV=dataController;
-        thisManager=danhSachNhanVien.getStaffWithID(maNV);
+        staffJDBC=new StaffJDBC();
+        staffList=new StaffList();
+        listStaff=staffJDBC.getData();
+        staffList.setList(listStaff);
+        staffID=dataController;
+        thisStaff=staffList.getStaffWithID(staffID);
         initComponents();
-        //showInforLabel.setText(maNV+" - "+thisManager.getStaffName());
-        showTitle.setText("WELCOME "+maNV+"  " + thisManager.getStaffName());
+        showTitle.setText("WELCOME "+staffID+"  " + thisStaff.getStaffName());
         this.setLocationRelativeTo(null);
     }
 
@@ -138,17 +137,26 @@ public class StaffUI extends javax.swing.JFrame {
 
     private void homeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeButtonActionPerformed
         // TODO add your handling code here:
-        if(thisManager.getRole().equals("Shop assistant")){
+        if(thisStaff.getRole().equals("Shop assistant")){
             try {
-                NhanVienBanHangUI banHangUI=new NhanVienBanHangUI(maNV);
+                ShopAssistantUI banHangUI=new ShopAssistantUI(staffID);
                 banHangUI.setVisible(true);
                 this.dispose();
             } catch (Exception ex) {
                 Logger.getLogger(StaffUI.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }else if(thisStaff.getRole().equals("Manager")){
+            try {
+                AdminUI adminUI=new AdminUI(staffID);
+                adminUI.setVisible(true);
+                this.dispose();
+            } catch (Exception ex) {
+                Logger.getLogger(StaffUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+          
         }else{
             try {
-                NhanVienKhoUI nhanVienKhoUI=new NhanVienKhoUI(maNV);
+                StorageStaffUI nhanVienKhoUI=new StorageStaffUI(staffID);
                 nhanVienKhoUI.setVisible(true);
                 this.dispose();
             } catch (Exception ex) {
@@ -163,7 +171,7 @@ public class StaffUI extends javax.swing.JFrame {
         oldPass = JOptionPane.showInputDialog("Input current password");
         if (oldPass != null && oldPass.equals("") == false) {
             System.out.println("Old" + oldPass);
-            Staff nv = danhSachNhanVien.getStaffWithID(maNV);
+            Staff nv = staffList.getStaffWithID(staffID);
             System.out.println("MK" + nv.getPassword());
             if (oldPass.equals(nv.getPassword())) {
                 try {
@@ -173,7 +181,7 @@ public class StaffUI extends javax.swing.JFrame {
                     } else if (newPass.equals("")) {
                         // JOptionPane.showMessageDialog(rootPane, "Nothing change");
                     } else {
-                        nhanVienJDBC.changePassword(maNV, newPass);
+                        staffJDBC.changePassword(staffID, newPass);
                     }
                 } catch (Exception ex) {
                     Logger.getLogger(ManagerUI.class.getName()).log(Level.SEVERE, null, ex);
