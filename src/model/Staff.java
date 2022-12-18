@@ -15,7 +15,7 @@ public class Staff {
     public void ListRole()
     {
         listRole.add("Shop assistant");
-        listRole.add("Warehouse staff");
+        listRole.add("Storage staff");
         listRole.add("Manager");
     }
     private String staffID,staffName,role,password,phoneNumber,DoB;

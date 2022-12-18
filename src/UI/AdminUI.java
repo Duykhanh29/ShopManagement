@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import jdbc.*;
-import quanlycuahang.*;
 import File.*;
 import check.*;
 import java.io.File;
@@ -34,32 +33,32 @@ public class AdminUI extends javax.swing.JFrame {
     BillFileIO billFileIO;
     BillDetailsFIleIO billDetailsFIleIO;
     
-    Staff nhanVien;
-    HangHoaJDBC hangHoaJDBC;
-    NhanVienJDBC nhanVienJDBC;
-    HoaDonJDBC hoaDonJDBC;
-    ChiTietHoaDonJDBC chiTietHoaDonJDBC;
+    Staff staff;
+    GoodsJDBC goodsJDBC;
+    StaffJDBC staffJDBC;
+    BillJDBC billJDBC;
+    BillDetailsJDBC billDetailsJDBC;
 
-    DanhSachHangHoa danhSachHangHoa;
-    DanhSachHoaDon danhSachHoaDon;
-    DanhSachChiTietHoaDon danhSachChiTietHoaDon;
-    DanhSachNhanVien danhSachNhanVien;
+    GoodsList goodsList;
+    BillList billList;
+    BillDetailsList billDetailsList;
+    StaffList staffList;
 
-    DefaultTableModel bangNhanVien;
-    DefaultTableModel bangHangHoa;
+    DefaultTableModel tableForStaff;
+    DefaultTableModel tableForGoods;
 
-    ArrayList<Staff> listNhanVien = null;
-    ArrayList<Goods> listHangHoa = null;
-    ArrayList<BillDetails> listChiTietHoaDon = null;
-    ArrayList<Bill> listHoaDon = null;
+    ArrayList<Staff> listStaff = null;
+    ArrayList<Goods> listGoods = null;
+    ArrayList<BillDetails> listBillDetails = null;
+    ArrayList<Bill> listBill = null;
     Pattern checkValidPhone = Pattern.compile("^0\\d{9}$");
     CheckDate checkDate = new CheckDate();
 
     FileIO fileIO = new FileIO();
-    int clickNV = -1;
-    int clickHH = -1;
+    int clickStaff = -1;
+    int clickGoods = -1;
     boolean isOpen = false;
-    String maNV;
+    String staffID;
 
     /**
      * Creates new form AdminUI
@@ -67,39 +66,39 @@ public class AdminUI extends javax.swing.JFrame {
     //  final JTextField textFieldA = new HintTextField("A hint here");
     public AdminUI(String dataController) throws Exception {
         initComponents();
-        hangHoaJDBC = new HangHoaJDBC();
-        nhanVienJDBC = new NhanVienJDBC();
-        hoaDonJDBC = new HoaDonJDBC();
-        nhanVien = new Staff();
-        chiTietHoaDonJDBC = new ChiTietHoaDonJDBC();
-        danhSachHangHoa = new DanhSachHangHoa();
-        danhSachHoaDon = new DanhSachHoaDon();
-        danhSachNhanVien = new DanhSachNhanVien();
-        danhSachChiTietHoaDon = new DanhSachChiTietHoaDon();
+        goodsJDBC = new GoodsJDBC();
+        staffJDBC = new StaffJDBC();
+        billJDBC = new BillJDBC();
+        staff = new Staff();
+        billDetailsJDBC = new BillDetailsJDBC();
+        goodsList = new GoodsList();
+        billList = new BillList();
+        staffList = new StaffList();
+        billDetailsList = new BillDetailsList();
         staffFileIO=new StaffFileIO();
         goodsFileIO=new GoodsFileIO();
         billDetailsFIleIO=new BillDetailsFIleIO();
         billFileIO=new BillFileIO();
         
-        listNhanVien = nhanVienJDBC.getDataNhanVien();
-        listHangHoa = hangHoaJDBC.getDataHangHoa();
-        listHoaDon = hoaDonJDBC.getDataHoaDon();
-        listChiTietHoaDon = chiTietHoaDonJDBC.getDataChiTietHoaDon();
-        danhSachHangHoa.setList(listHangHoa);
-        danhSachHoaDon.setDanhSachHoaDon(listHoaDon);
-        danhSachNhanVien.setList(listNhanVien);
-        danhSachChiTietHoaDon.setList(listChiTietHoaDon);
+        listStaff = staffJDBC.getData();
+        listGoods = goodsJDBC.getData();
+        listBill = billJDBC.getData();
+        listBillDetails = billDetailsJDBC.getData();
+        goodsList.setList(listGoods);
+        billList.setList(listBill);
+        staffList.setList(listStaff);
+        billDetailsList.setList(listBillDetails);
         
-        billFileIO.writeDataFromFile(billFileIO.fileBill, listHoaDon);
-        goodsFileIO.writeDataFromFile(goodsFileIO.fileGoods, listHangHoa);
-        staffFileIO.writeDataFromFile(staffFileIO.fileStaff, listNhanVien);
-        billDetailsFIleIO.writeDataFromFile(billDetailsFIleIO.fileDetail, listChiTietHoaDon);
-        bangNhanVien = (DefaultTableModel) staffTable.getModel();
-        bangHangHoa = (DefaultTableModel) goodsTable.getModel();
+        billFileIO.writeDataFromFile(billFileIO.fileBill, listBill);
+        goodsFileIO.writeDataFromFile(goodsFileIO.fileGoods, listGoods);
+        staffFileIO.writeDataFromFile(staffFileIO.fileStaff, listStaff);
+        billDetailsFIleIO.writeDataFromFile(billDetailsFIleIO.fileDetail, listBillDetails);
+        tableForStaff = (DefaultTableModel) staffTable.getModel();
+        tableForGoods = (DefaultTableModel) goodsTable.getModel();
         showComboBox();
         displayDanhSachHangHoa();
         displayDanhSachNhanVien();
-        maNV = dataController;
+        staffID = dataController;
         this.setLocationRelativeTo(null);
     }
 
@@ -626,6 +625,13 @@ public class AdminUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void showComboBox() {
+        ArrayList<String> listRole = new ArrayList<>();
+        listRole = staff.getListRole();
+        for (String string : listRole) {
+            roleComboBox.addItem(string);
+        }
+    }
     public boolean isInt(String str) {
         try {
             Integer.parseInt(str);
@@ -636,25 +642,25 @@ public class AdminUI extends javax.swing.JFrame {
     }
 
     public void displayDanhSachNhanVien() {
-        for (int i = 0; i < danhSachNhanVien.getSize(); i++) {
-            showTableNhanVien((i + 1), danhSachNhanVien.getStaffAtIndex(i));
+        for (int i = 0; i < staffList.getSize(); i++) {
+            showTableNhanVien((i + 1), staffList.getStaffAtIndex(i));
         }
     }
 
     public void showTableNhanVien(int index, Staff n) {
-        bangNhanVien.addRow(new Object[]{
+        tableForStaff.addRow(new Object[]{
             index, n.getStaffID(), n.getStaffName(), n.getRole(), n.getDoB(), n.getPhoneNumber()
         });
     }
 
     public void displayDanhSachHangHoa() {
-        for (int i = 0; i < danhSachHangHoa.getSize(); i++) {
-            showTableHangHoa((i + 1), danhSachHangHoa.getGoodsAtIndex(i));
+        for (int i = 0; i < goodsList.getSize(); i++) {
+            showTableHangHoa((i + 1), goodsList.getGoodsAtIndex(i));
         }
     }
 
     public void showTableHangHoa(int index, Goods n) {
-        bangHangHoa.addRow(new Object[]{
+        tableForGoods.addRow(new Object[]{
             index, n.getGoodsID(), n.getGoodsName(), n.getProducer(), n.getQuantity(), n.getImportedCost(), n.getSellingCost()
         });
     }
@@ -760,7 +766,7 @@ public class AdminUI extends javax.swing.JFrame {
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         try {
             // TODO add your handling code here:
-            ManagerUI managerUI = new ManagerUI(maNV);
+            ManagerUI managerUI = new ManagerUI(staffID);
             managerUI.setVisible(true);
             this.dispose();
         } catch (Exception ex) {
@@ -776,22 +782,22 @@ public class AdminUI extends javax.swing.JFrame {
         quantityLabel.setText("");
         importedCostLabel.setText("");
         sellingCostTextField.setText("");
-        bangHangHoa.setRowCount(0);
+        tableForGoods.setRowCount(0);
         displayDanhSachHangHoa();
     }//GEN-LAST:event_resetHangHoaButtonActionPerformed
 
     private void timKiemHangHoaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timKiemHangHoaButtonActionPerformed
         // TODO add your handling code here:
-        if (listHangHoa.size() != 0) {
+        if (listGoods.size() != 0) {
             if (searchGoodsTextField.getText().toString().trim().equals("")) {
                 JOptionPane.showMessageDialog(hangHoaPanel, "Nhap ma");
             } else {
-                Goods h = danhSachHangHoa.getGoodsWithID(searchGoodsTextField.getText().toString().trim());
+                Goods h = goodsList.getGoodsWithID(searchGoodsTextField.getText().toString().trim());
                 if (h == null) {
                     JOptionPane.showMessageDialog(hangHoaPanel, "not found");
                 } else {
                     showToFormGoods(h);
-                    bangHangHoa.setRowCount(0);
+                    tableForGoods.setRowCount(0);
                     showTableHangHoa(1, h);
                 }
             }
@@ -802,17 +808,17 @@ public class AdminUI extends javax.swing.JFrame {
 
     private void suaHangHoaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_suaHangHoaButtonActionPerformed
         // TODO add your handling code here:
-        if (listHangHoa.size() != 0) {
-            if (clickHH != -1) {
+        if (listGoods.size() != 0) {
+            if (clickGoods != -1) {
                 try {
-                    Goods oldHH = danhSachHangHoa.getGoodsAtIndex(clickHH);
+                    Goods oldHH = goodsList.getGoodsAtIndex(clickGoods);
                     if (emptyCheckHangHoa() == false) {
                         Goods newHH = getHangHoaFromForm();
-                        hangHoaJDBC.edit(oldHH, newHH);
-                        listHangHoa = hangHoaJDBC.getDataHangHoa();
-                        danhSachHangHoa.setList(listHangHoa);
-                        bangHangHoa.setRowCount(0);
-                        goodsFileIO.writeDataFromFile(goodsFileIO.fileGoods, listHangHoa);
+                        goodsJDBC.edit(oldHH, newHH);
+                        listGoods = goodsJDBC.getData();
+                        goodsList.setList(listGoods);
+                        tableForGoods.setRowCount(0);
+                        goodsFileIO.writeDataFromFile(goodsFileIO.fileGoods, listGoods);
                         displayDanhSachHangHoa();
                     }
 
@@ -827,11 +833,11 @@ public class AdminUI extends javax.swing.JFrame {
 
     private void goodsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_goodsTableMouseClicked
         // TODO add your handling code here:
-        if (listHangHoa.size() != 0) {
+        if (listGoods.size() != 0) {
             int point = goodsTable.getSelectedRow();
-            clickHH = point;
-            if (clickHH != -1) {
-                Goods hh = danhSachHangHoa.getGoodsAtIndex(clickHH);
+            clickGoods = point;
+            if (clickGoods != -1) {
+                Goods hh = goodsList.getGoodsAtIndex(clickGoods);
                 showToFormGoods(hh);
             }
         }
@@ -839,17 +845,17 @@ public class AdminUI extends javax.swing.JFrame {
 
     private void searchStaffButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchStaffButtonActionPerformed
         // TODO add your handling code here:
-        if (listNhanVien.size() != 0) {
+        if (listStaff.size() != 0) {
             if (timKiemNhanVienTextField.getText().toString().equals("")) {
                 JOptionPane.showMessageDialog(this, "Nhap ma");
             } else {
                 String x = timKiemNhanVienTextField.getText().toString().trim();
-                Staff nv = danhSachNhanVien.getStaffWithID(x);
+                Staff nv = staffList.getStaffWithID(x);
                 if (nv == null) {
                     JOptionPane.showMessageDialog(this, "Not found");
                 } else {
                     showToFormStaff(nv);
-                    bangNhanVien.setRowCount(0);
+                    tableForStaff.setRowCount(0);
                     showTableNhanVien(1, nv);
                 }
             }
@@ -865,22 +871,22 @@ public class AdminUI extends javax.swing.JFrame {
         phoneNumberTextField.setText("");
         DoBTextField.setText("");
         roleComboBox.setSelectedIndex(0);
-        bangNhanVien.setRowCount(0);
+        tableForStaff.setRowCount(0);
         displayDanhSachNhanVien();
     }//GEN-LAST:event_resetSatffButtonActionPerformed
 
     private void deleteStaffButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteStaffButtonActionPerformed
         // TODO add your handling code here:
-        if (listNhanVien.size() != 0) {
-            if (clickNV != 0) {
+        if (listStaff.size() != 0) {
+            if (clickStaff != 0) {
                 try {
-                    Staff nv = danhSachNhanVien.getStaffAtIndex(clickNV);
+                    Staff nv = staffList.getStaffAtIndex(clickStaff);
                     System.out.println(nv.toString());
-                    nhanVienJDBC.delete(nv);
-                    listNhanVien = nhanVienJDBC.getDataNhanVien();
-                    danhSachNhanVien.setList(listNhanVien);
-                    bangNhanVien.setRowCount(0);
-                    staffFileIO.writeDataFromFile(staffFileIO.fileStaff, listNhanVien);
+                    staffJDBC.delete(nv);
+                    listStaff = staffJDBC.getData();
+                    staffList.setList(listStaff);
+                    tableForStaff.setRowCount(0);
+                    staffFileIO.writeDataFromFile(staffFileIO.fileStaff, listStaff);
                     displayDanhSachNhanVien();
                 } catch (Exception ex) {
                     Logger.getLogger(AdminUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -895,13 +901,13 @@ public class AdminUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (emptyCheckNhanVien() == false) {
             try {
-                Staff oldNV = danhSachNhanVien.getStaffAtIndex(clickNV);
+                Staff oldNV = staffList.getStaffAtIndex(clickStaff);
                 Staff newNV = getNhanVienFromForm();
-                nhanVienJDBC.edit(oldNV, newNV);
-                listNhanVien = nhanVienJDBC.getDataNhanVien();
-                danhSachNhanVien.setList(listNhanVien);
-                bangNhanVien.setRowCount(0);
-                staffFileIO.writeDataFromFile(staffFileIO.fileStaff, listNhanVien);
+                staffJDBC.edit(oldNV, newNV);
+                listStaff = staffJDBC.getData();
+                staffList.setList(listStaff);
+                tableForStaff.setRowCount(0);
+                staffFileIO.writeDataFromFile(staffFileIO.fileStaff, listStaff);
                 displayDanhSachNhanVien();
             } catch (Exception ex) {
                 Logger.getLogger(AdminUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -921,15 +927,15 @@ public class AdminUI extends javax.swing.JFrame {
                 String matKhau = "123456";
                 String soDienThoai = String.valueOf(phoneNumberTextField.getText());
                 String DoB = String.valueOf(DoBTextField.getText());
-                if (danhSachNhanVien.checkStaffInDataBase(maNV) == true) {
+                if (staffList.checkStaffInDataBase(maNV) == true) {
                     JOptionPane.showMessageDialog(hangHoaPanel, "Please input other id");
                 } else {
                     Staff nv = new Staff(maNV, tenNV, chucVu, matKhau, soDienThoai, DoB);
-                    nhanVienJDBC.insertIntoDatabase(nv);
-                    listNhanVien = nhanVienJDBC.getDataNhanVien();
-                    staffFileIO.writeDataFromFile(staffFileIO.fileStaff, listNhanVien);
-                    danhSachNhanVien.setList(listNhanVien);
-                    bangNhanVien.setRowCount(0);
+                    staffJDBC.insertIntoDatabase(nv);
+                    listStaff = staffJDBC.getData();
+                    staffFileIO.writeDataFromFile(staffFileIO.fileStaff, listStaff);
+                    staffList.setList(listStaff);
+                    tableForStaff.setRowCount(0);
                     displayDanhSachNhanVien();
                 }
 
@@ -945,11 +951,11 @@ public class AdminUI extends javax.swing.JFrame {
 
     private void staffTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_staffTableMouseClicked
         // TODO add your handling code here:
-        if (listNhanVien.size() != 0) {
+        if (listStaff.size() != 0) {
             int point = staffTable.getSelectedRow();
-            clickNV = point;
-            if (clickNV != -1) {
-                Staff nv = danhSachNhanVien.getStaffAtIndex(clickNV);
+            clickStaff = point;
+            if (clickStaff != -1) {
+                Staff nv = staffList.getStaffAtIndex(clickStaff);
                 System.out.println("NV: " + nv.toString());
                 showToFormStaff(nv);
             }
@@ -968,21 +974,21 @@ public class AdminUI extends javax.swing.JFrame {
             String Date = "";
             if (date.equals("") == false && month.equals("") == false && year.equals("") == false) {
                 if (checkDate.isValidDate(date, month, year) == true) {
-                    int cost1 = danhSachHoaDon.getTotalCostAtACertainDate(date, month, year);
+                    int cost1 = billList.getTotalCostAtACertainDate(date, month, year);
                     showRevenueLabel.setText(cost1 + "");
                 } else {
                     JOptionPane.showMessageDialog(hangHoaPanel, "Input again 1");
                 }
             } else if (month.equals("") == false && year.equals("") == false) {
                 if (checkDate.isValidDate(date, month, year) == true) {
-                    int cost1 = danhSachHoaDon.getTotalCostAtACertainDate(date, month, year);
+                    int cost1 = billList.getTotalCostAtACertainDate(date, month, year);
                     showRevenueLabel.setText(cost1 + "");
                 } else {
                     JOptionPane.showMessageDialog(hangHoaPanel, "Input again 2");
                 }
             } else {
                 if (checkDate.isValidDate(date, month, year) == true) {
-                    int cost1 = danhSachHoaDon.getTotalCostAtACertainDate(date, month, year);
+                    int cost1 = billList.getTotalCostAtACertainDate(date, month, year);
                     showRevenueLabel.setText(cost1 + "");
                 } else {
                     JOptionPane.showMessageDialog(hangHoaPanel, "Input again 3");
@@ -1102,11 +1108,5 @@ public class AdminUI extends javax.swing.JFrame {
     private javax.swing.JTextField yearTextField;
     // End of variables declaration//GEN-END:variables
 
-    private void showComboBox() {
-        ArrayList<String> listRole = new ArrayList<>();
-        listRole = nhanVien.getListRole();
-        for (String string : listRole) {
-            roleComboBox.addItem(string);
-        }
-    }
+    
 }
