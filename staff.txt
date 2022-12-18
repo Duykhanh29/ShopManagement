@@ -1,9 +1,8 @@
-NV01	Nguyen Van	Manager	123456	02121121	2002-12-12
-NV02	Nguyen A	Shop assistant	123456	3232	2001-01-11
-NV03	Trab Van B	Warehouse staff	00000000	43	2000-02-12
-NV04	Nguyen Thi Hanh	Warehouse staff	123456	021gfsd21121	2002-12-17
-NV05	Phan Van Cam	Shop assistant	00000000	43	2003-12-10
-NV06	Nguyen Van A	Shop assistant	00000000	021214334121	2007-12-12
-NV07	Pham Van Dung	Shop assistant	00000000	433	2006-12-02
-NV08	Truong Van N	Shop assistant	00000000	4343343	2006-12-10
-NV10	Nguyen Van Manh	Shop assistant	123456	0987654321	2001-12-12
+NV01	Nguyen Van	Manager	123456	0987654321	2002-12-12
+NV02	Nguyen A	Shop assistant	123456	0987654321	2001-01-11
+NV03	Trab Van B	Storage staff	123456	0987654321	2000-02-12
+NV04	Nguyen Thi Hanh	Storage staff	123456	0987654321	2002-12-17
+NV05	Phan Van Cam	Shop assistant	123456	0987654321	2003-12-10
+NV06	Nguyen Van A	Shop assistant	123456	0987654321	2007-12-12
+NV07	Pham Van Dung	Shop assistant	123456	0987654321	2006-12-02
+NV16	Tran Van Hoang	Shop assistant	123456	0123456789	2022-12-11
