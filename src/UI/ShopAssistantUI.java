@@ -524,7 +524,6 @@ public class ShopAssistantUI extends javax.swing.JFrame {
                         int sellingCosts = goodsList.getSellingCostFromID(goodsID);
                         int totalCosts = sellingCosts * quantity;
                         BillDetails c = new BillDetails(billID, goodsID, name, quantity, sellingCosts, totalCosts);
-                        System.out.println("C:" + c.toString());
                         if (billList.checkExist(billID) == false) {
                             Bill b = new Bill(billID, staffID, returnDate(), 0, 0);
                             billJDBC.insertIntoDatabase(b);

@@ -136,7 +136,7 @@ public class AdminUI extends javax.swing.JFrame {
         editStaffButton = new javax.swing.JButton();
         deleteStaffButton = new javax.swing.JButton();
         resetSatffButton = new javax.swing.JButton();
-        timKiemNhanVienTextField = new javax.swing.JTextField();
+        searchStaffTextField = new javax.swing.JTextField();
         searchStaffButton = new javax.swing.JButton();
         hangHoaPanel = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -308,7 +308,7 @@ public class AdminUI extends javax.swing.JFrame {
                                         .addComponent(phoneNumberTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGroup(nhanVienPanelLayout.createSequentialGroup()
                                     .addGroup(nhanVienPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(timKiemNhanVienTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(searchStaffTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addComponent(searchStaffButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -356,7 +356,7 @@ public class AdminUI extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(nhanVienPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(resetSatffButton)
-                    .addComponent(timKiemNhanVienTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchStaffTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchStaffButton))
                 .addGap(83, 83, 83)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -766,8 +766,8 @@ public class AdminUI extends javax.swing.JFrame {
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         try {
             // TODO add your handling code here:
-            ManagerUI managerUI = new ManagerUI(staffID);
-            managerUI.setVisible(true);
+           StaffUI staffUI=new StaffUI(staffID);
+            staffUI.setVisible(true);
             this.dispose();
         } catch (Exception ex) {
             Logger.getLogger(AdminUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -846,10 +846,10 @@ public class AdminUI extends javax.swing.JFrame {
     private void searchStaffButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchStaffButtonActionPerformed
         // TODO add your handling code here:
         if (listStaff.size() != 0) {
-            if (timKiemNhanVienTextField.getText().toString().equals("")) {
-                JOptionPane.showMessageDialog(this, "Nhap ma");
+            if (searchStaffTextField.getText().toString().equals("")) {
+                JOptionPane.showMessageDialog(this, "Input ID");
             } else {
-                String x = timKiemNhanVienTextField.getText().toString().trim();
+                String x = searchStaffTextField.getText().toString().trim();
                 Staff nv = staffList.getStaffWithID(x);
                 if (nv == null) {
                     JOptionPane.showMessageDialog(this, "Not found");
@@ -881,7 +881,6 @@ public class AdminUI extends javax.swing.JFrame {
             if (clickStaff != 0) {
                 try {
                     Staff nv = staffList.getStaffAtIndex(clickStaff);
-                    System.out.println(nv.toString());
                     staffJDBC.delete(nv);
                     listStaff = staffJDBC.getData();
                     staffList.setList(listStaff);
@@ -956,7 +955,6 @@ public class AdminUI extends javax.swing.JFrame {
             clickStaff = point;
             if (clickStaff != -1) {
                 Staff nv = staffList.getStaffAtIndex(clickStaff);
-                System.out.println("NV: " + nv.toString());
                 showToFormStaff(nv);
             }
         }
@@ -1097,6 +1095,7 @@ public class AdminUI extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> roleComboBox;
     private javax.swing.JTextField searchGoodsTextField;
     private javax.swing.JButton searchStaffButton;
+    private javax.swing.JTextField searchStaffTextField;
     private javax.swing.JTextField sellingCostTextField;
     private javax.swing.JLabel showRevenueLabel;
     private javax.swing.JTextField staffIDTextField;
@@ -1104,7 +1103,6 @@ public class AdminUI extends javax.swing.JFrame {
     private javax.swing.JButton suaHangHoaButton;
     private javax.swing.JTabbedPane taoThongBaoPanel;
     private javax.swing.JButton timKiemHangHoaButton;
-    private javax.swing.JTextField timKiemNhanVienTextField;
     private javax.swing.JTextField yearTextField;
     // End of variables declaration//GEN-END:variables
 

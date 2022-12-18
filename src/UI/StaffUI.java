@@ -32,8 +32,9 @@ public class StaffUI extends javax.swing.JFrame {
         staffID=dataController;
         thisStaff=staffList.getStaffWithID(staffID);
         initComponents();
-        showTitle.setText("WELCOME "+staffID+"  " + thisStaff.getStaffName());
         this.setLocationRelativeTo(null);
+        showTitle.setText("WELCOME "+staffID+"  " + thisStaff.getStaffName());
+        
     }
 
     private StaffUI() {
@@ -170,9 +171,7 @@ public class StaffUI extends javax.swing.JFrame {
         String oldPass, newPass;
         oldPass = JOptionPane.showInputDialog("Input current password");
         if (oldPass != null && oldPass.equals("") == false) {
-            System.out.println("Old" + oldPass);
             Staff nv = staffList.getStaffWithID(staffID);
-            System.out.println("MK" + nv.getPassword());
             if (oldPass.equals(nv.getPassword())) {
                 try {
                     newPass = JOptionPane.showInputDialog("Input new password");
