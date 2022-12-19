@@ -2,10 +2,10 @@ HH02	Motobike	Vision	15	70	80
 HH03	Bike	Hyn	0	20	30
 HH04	Computer	Dell	39	100	110
 HH05	Mouse	Silotech	52	10	14
-HH06	Book	NoteBook	22	20	40
+HH06	Book	NoteBook	13	20	40
 HH07	Lamp	Light	12	12	40
 HH08	Facebook	Meta	6	120	140
-HH14	dfdas	dfdas	20	123	130
+HH14	dfdas	dfdas	3	123	130
 HH15	Ten Hang Hoa	Ten Hang Hoa	25	123	134
-HH16	Phone	Phone	94	3000	3400
-HH20	Bottle	Bottle	140	123456	142000
+HH16	Phone	Phone	94	3000	3450
+HH20	Bottle	Bottle	135	123456	142000
