@@ -60,7 +60,7 @@ public class StaffList {
     public ArrayList<Staff> listStorageStaff(){
         ArrayList<Staff> newList=new ArrayList<>();
         for (Staff staff : list) {
-            if(staff.getRole().equals("Warehouse staff")){
+            if(staff.getRole().equals("Storage staff")){
                 newList.add(staff);
             }
         }
